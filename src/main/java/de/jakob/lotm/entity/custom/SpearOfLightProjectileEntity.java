@@ -34,6 +34,7 @@ public class SpearOfLightProjectileEntity extends AbstractArrow {
     private final double damage;
     private final boolean griefing;
     private final Ability ability;
+    private final static int MAX_LIFETIME = 20 * 20;
 
     private int ticks = 0;
     private int petrifiedTicks = 0;
@@ -101,6 +102,10 @@ public class SpearOfLightProjectileEntity extends AbstractArrow {
         }
 
         ParticleUtil.spawnParticles((ServerLevel) level, ParticleTypes.END_ROD, position(), 8, .3, .3, .3, 0);
+
+        if(this.ticks >= MAX_LIFETIME){
+            this.discard();
+        }
     }
 
     @Override

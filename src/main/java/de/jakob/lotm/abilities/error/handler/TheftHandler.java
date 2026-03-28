@@ -32,6 +32,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.*;
 
@@ -438,7 +439,7 @@ public class TheftHandler {
         float diff = targetSeq - userSeq;
         diff = diff < 0 ? 0 : diff;
 
-        return 0.1f + 0.15f * diff;
+        return 0.05f + 0.05f * diff;
     }
 
     public static void performSanityTheft(LivingEntity entity, LivingEntity target, Random random){
@@ -453,7 +454,7 @@ public class TheftHandler {
         }
 
         float sanityToSteal = getSeqDifferenceMultiplier(BeyonderData.getSequence(entity), BeyonderData.getSequence(target))
-                + (float) (BeyonderData.getMultiplier(entity) / 10);
+                + (float) (BeyonderData.getMultiplier(entity) / 20);
 
         LOTMCraft.LOGGER.info("SanityToSteal: {}", sanityToSteal);
 
@@ -478,15 +479,17 @@ public class TheftHandler {
             return;
         }
 
-        float digestionToSteal = getSeqDifferenceMultiplier(BeyonderData.getSequence(entity), BeyonderData.getSequence(target))
-                + (float) (BeyonderData.getMultiplier(entity) / 10);
+        int userSeq = BeyonderData.getSequence(entity);
+        int targetSeq = BeyonderData.getSequence(target);
 
-        float targetValue = target.getPersistentData().getFloat(BeyonderData.NBT_DIGESTION_PROGRESS);
-        float userValue = entity.getPersistentData().getFloat(BeyonderData.NBT_DIGESTION_PROGRESS);
+        float digestionToSteal = getSeqDifferenceMultiplier(userSeq, targetSeq)
+                + (float) (BeyonderData.getMultiplier(entity) / 20);
 
-        target.getPersistentData().putFloat(BeyonderData.NBT_DIGESTION_PROGRESS,
-                 Math.max(targetValue - digestionToSteal, 0.0f));
-        entity.getPersistentData().putFloat(BeyonderData.NBT_DIGESTION_PROGRESS,
-                Math.max(userValue + digestionToSteal, 1.0f));
+        BeyonderData.digest((ServerPlayer) target, (-digestionToSteal), false);
+
+        int diff = Math.min(targetSeq - userSeq, 0)/10;
+        LOTMCraft.LOGGER.info("Digestion value: {}", (digestionToSteal * (1.0f + diff)));
+
+        BeyonderData.digest((ServerPlayer) entity, (digestionToSteal * (1.0f + diff)), false);
     }
 }

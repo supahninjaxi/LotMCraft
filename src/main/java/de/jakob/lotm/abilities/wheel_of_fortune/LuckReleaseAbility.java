@@ -51,11 +51,10 @@ public class LuckReleaseAbility extends Ability {
         int currentLuck = entity.hasEffect(ModEffects.LUCK) ? entity.getEffect(ModEffects.LUCK).getAmplifier() : 0;
         int newLuck = currentLuck + additionalLuck;
 
-        entity.addEffect(new MobEffectInstance(ModEffects.LUCK, 20 * 35, newLuck));
+        entity.addEffect(new MobEffectInstance(ModEffects.LUCK, 20 * 35 * (newLuck / 2), newLuck));
 
         EntityLocation loc = new EntityLocation(entity);
         ParticleUtil.createParticleSpirals(dust, loc, 1.75, 1.75, 2.25, .35, 5, 20 * 35, 15, 8);
-
     }
 
     private int getAdditionalLuckByTicks(long ticks) {
