@@ -6,6 +6,7 @@ import de.jakob.lotm.entity.custom.AvatarEntity;
 import de.jakob.lotm.rendering.effectRendering.EffectManager;
 import de.jakob.lotm.util.BeyonderData;
 import de.jakob.lotm.util.helper.AbilityUtil;
+import de.jakob.lotm.util.helper.AllyUtil;
 import de.jakob.lotm.util.helper.DamageLookup;
 import de.jakob.lotm.util.helper.ParticleUtil;
 import de.jakob.lotm.util.scheduling.ServerScheduler;
@@ -81,7 +82,7 @@ public class DemonicSpellsAbility extends SelectableAbility {
 
         AbilityUtil.getNearbyEntities(entity, level, swampCenter, swampRadius)
                 .stream()
-                .filter(target -> AbilityUtil.mayDamage(entity, target))
+                .filter(target -> AbilityUtil.mayDamage(entity, target) && !AllyUtil.isAlly(target, entity.getUUID()))
                 .forEach(target -> {
                     target.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 6, 2, false, false));
                     target.addEffect(new MobEffectInstance(MobEffects.WITHER, 20 * 4, 1, false, false));
@@ -131,7 +132,7 @@ public class DemonicSpellsAbility extends SelectableAbility {
         AbilityUtil.damageNearbyEntities(level, caster, 15, explosionDamage, explosionPos, true, false);
         AbilityUtil.getNearbyEntities(caster, level, explosionPos, 15)
                 .stream()
-                .filter(target -> AbilityUtil.mayDamage(caster, target))
+                .filter(target -> AbilityUtil.mayDamage(caster, target) && !AllyUtil.isAlly(target, caster.getUUID()))
                 .forEach(target -> {
                     Vec3 knockback = target.position().subtract(explosionPos).normalize().scale(1.5);
                     target.setDeltaMovement(target.getDeltaMovement().add(knockback));
