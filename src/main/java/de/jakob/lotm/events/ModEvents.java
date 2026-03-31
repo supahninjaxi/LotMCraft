@@ -7,11 +7,11 @@ import de.jakob.lotm.entity.client.ability_entities.door_pathway.travelers_door.
 import de.jakob.lotm.entity.client.ability_entities.meteor.MeteorModel;
 import de.jakob.lotm.entity.client.ability_entities.mother_pathway.blooming_area.BloomingAreaModel;
 import de.jakob.lotm.entity.client.ability_entities.mother_pathway.coffin.CoffinModel;
-import de.jakob.lotm.entity.client.ability_entities.projectiles.paper_dagger.PaperDaggerProjectileModel;
-import de.jakob.lotm.entity.client.ability_entities.projectiles.spear_of_destruction.SpearOfDestructionProjectileModel;
-import de.jakob.lotm.entity.client.ability_entities.projectiles.spear_of_light.SpearOfLightProjectileModel;
-import de.jakob.lotm.entity.client.ability_entities.projectiles.unshadowed_spear.UnshadowedSpearProjectileModel;
-import de.jakob.lotm.entity.client.ability_entities.projectiles.wind_blade.WindBladeModel;
+import de.jakob.lotm.entity.client.projectiles.paper_dagger.PaperDaggerProjectileModel;
+import de.jakob.lotm.entity.client.projectiles.spear_of_destruction.SpearOfDestructionProjectileModel;
+import de.jakob.lotm.entity.client.projectiles.spear_of_light.SpearOfLightProjectileModel;
+import de.jakob.lotm.entity.client.projectiles.unshadowed_spear.UnshadowedSpearProjectileModel;
+import de.jakob.lotm.entity.client.projectiles.wind_blade.WindBladeModel;
 import de.jakob.lotm.entity.client.ability_entities.red_priest_pathway.war_banner.WarBannerModel;
 import de.jakob.lotm.entity.client.ability_entities.tornado.TornadoModel;
 import de.jakob.lotm.entity.client.ability_entities.tyrant_pathway.tsunami.TsunamiModel;
@@ -21,9 +21,9 @@ import de.jakob.lotm.entity.client.ability_entities.mother_pathway.desolate_area
 import de.jakob.lotm.entity.client.ability_entities.door_pathway.exile_doors.ExileDoorsModel;
 import de.jakob.lotm.entity.client.ability_entities.door_pathway.return_portal.HighSequenceDoorsModel;
 import de.jakob.lotm.entity.client.ability_entities.sun_pathway.justice_sword.JusticeSwordModel;
-import de.jakob.lotm.entity.client.ability_entities.projectiles.fireball.FireballModel;
-import de.jakob.lotm.entity.client.ability_entities.projectiles.flaming_spear.FlamingSpearProjectileModel;
-import de.jakob.lotm.entity.client.ability_entities.projectiles.frost_spear.FrostSpearProjectileModel;
+import de.jakob.lotm.entity.client.projectiles.fireball.FireballModel;
+import de.jakob.lotm.entity.client.projectiles.flaming_spear.FlamingSpearProjectileModel;
+import de.jakob.lotm.entity.client.projectiles.frost_spear.FrostSpearProjectileModel;
 import de.jakob.lotm.entity.client.ability_entities.door_pathway.apprentice_door.ApprenticeDoorModel;
 import de.jakob.lotm.entity.client.ability_entities.door_pathway.book.ApprenticeBookModel;
 import de.jakob.lotm.entity.client.ability_entities.wheel_of_fortune_pathway.misfortune_words.MisfortuneWordsModel;
@@ -34,6 +34,7 @@ import de.jakob.lotm.entity.client.spirits.blue_wizard.SpiritBlueWizardModel;
 import de.jakob.lotm.entity.client.spirits.bubbles.SpiritBubblesModel;
 import de.jakob.lotm.entity.client.spirits.dervish.SpiritDervishModel;
 import de.jakob.lotm.entity.client.spirits.ghost.SpiritGhostModel;
+import de.jakob.lotm.entity.client.spirits.malmouth.SpiritMalmouthModel;
 import de.jakob.lotm.entity.client.spirits.spirit_bane.SpiritBaneModel;
 import de.jakob.lotm.entity.client.spirits.translucent_wizard.SpiritTranslucentWizardModel;
 import de.jakob.lotm.entity.custom.*;
@@ -102,6 +103,7 @@ public class ModEvents {
         event.registerLayerDefinition(SpiritGhostModel.LAYER_LOCATION, SpiritGhostModel::createBodyLayer);
         event.registerLayerDefinition(SpiritBizarroBaneModel.LAYER_LOCATION, SpiritBizarroBaneModel::createBodyLayer);
         event.registerLayerDefinition(SpiritBaneModel.LAYER_LOCATION, SpiritBaneModel::createBodyLayer);
+        event.registerLayerDefinition(SpiritMalmouthModel.LAYER_LOCATION, SpiritMalmouthModel::createBodyLayer);
 
         // Mythical Creature Forms
         event.registerLayerDefinition(TyrantMythicalCreatureModel.LAYER_LOCATION, TyrantMythicalCreatureModel::createBodyLayer);
@@ -123,6 +125,7 @@ public class ModEvents {
         event.put(ModEntities.SPIRIT_GHOST.get(), SpiritGhostEntity.createAttributes().build());
         event.put(ModEntities.SPIRIT_BIZARRO_BANE.get(), SpiritBizarroBaneEntity.createAttributes().build());
         event.put(ModEntities.SPIRIT_BANE.get(), SpiritBaneEntity.createAttributes().build());
+        event.put(ModEntities.SPIRIT_MALMOUTH.get(), SpiritBaneEntity.createAttributes().build());
     }
 
     @SubscribeEvent
@@ -189,6 +192,13 @@ public class ModEvents {
         event.register(
                 ModEntities.SPIRIT_BANE.get(),
                 SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Mob::checkMobSpawnRules,
+                RegisterSpawnPlacementsEvent.Operation.REPLACE
+        );
+        event.register(
+                ModEntities.SPIRIT_MALMOUTH.get(),
+                SpawnPlacementTypes.NO_RESTRICTIONS,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Mob::checkMobSpawnRules,
                 RegisterSpawnPlacementsEvent.Operation.REPLACE

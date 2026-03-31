@@ -23,11 +23,12 @@ import de.jakob.lotm.entity.client.ability_entities.mother_pathway.blooming_area
 import de.jakob.lotm.entity.client.ability_entities.mother_pathway.coffin.CoffinRenderer;
 import de.jakob.lotm.entity.client.ability_entities.mother_pathway.return_from_nature.ReturnFromNaturelRenderer;
 import de.jakob.lotm.entity.client.ability_entities.original_body.OriginalBodyRenderer;
-import de.jakob.lotm.entity.client.ability_entities.projectiles.paper_dagger.PaperDaggerProjectileRenderer;
-import de.jakob.lotm.entity.client.ability_entities.projectiles.spear_of_destruction.SpearOfDestructionProjectileRenderer;
-import de.jakob.lotm.entity.client.ability_entities.projectiles.spear_of_light.SpearOfLightProjectileRenderer;
-import de.jakob.lotm.entity.client.ability_entities.projectiles.unshadowed_spear.UnshadowedSpearProjectileRenderer;
-import de.jakob.lotm.entity.client.ability_entities.projectiles.wind_blade.WindBladeRenderer;
+import de.jakob.lotm.entity.client.projectiles.paper_dagger.PaperDaggerProjectileRenderer;
+import de.jakob.lotm.entity.client.projectiles.spear_of_destruction.SpearOfDestructionProjectileRenderer;
+import de.jakob.lotm.entity.client.projectiles.spear_of_light.SpearOfLightProjectileRenderer;
+import de.jakob.lotm.entity.client.projectiles.spirit_ball.SpiritBallRenderer;
+import de.jakob.lotm.entity.client.projectiles.unshadowed_spear.UnshadowedSpearProjectileRenderer;
+import de.jakob.lotm.entity.client.projectiles.wind_blade.WindBladeRenderer;
 import de.jakob.lotm.entity.client.ability_entities.red_priest_pathway.war_banner.WarBannerRenderer;
 import de.jakob.lotm.entity.client.ability_entities.sun_pathway.sun_kingdom.SunKingdomEntityRenderer;
 import de.jakob.lotm.entity.client.ability_entities.sun_pathway.sun.SunRenderer;
@@ -47,9 +48,9 @@ import de.jakob.lotm.entity.client.ability_entities.grafting.GraftingLocationRen
 import de.jakob.lotm.entity.client.ability_entities.sun_pathway.justice_sword.JusticeSwordRenderer;
 import de.jakob.lotm.entity.client.ability_entities.tyrant_pathway.lightning.LightningRenderer;
 import de.jakob.lotm.entity.client.ability_entities.tyrant_pathway.lightning_branch.LightningBranchRenderer;
-import de.jakob.lotm.entity.client.ability_entities.projectiles.fireball.FireballRenderer;
-import de.jakob.lotm.entity.client.ability_entities.projectiles.flaming_spear.FlamingSpearProjectileRenderer;
-import de.jakob.lotm.entity.client.ability_entities.projectiles.frost_spear.FrostSpearProjectileRenderer;
+import de.jakob.lotm.entity.client.projectiles.fireball.FireballRenderer;
+import de.jakob.lotm.entity.client.projectiles.flaming_spear.FlamingSpearProjectileRenderer;
+import de.jakob.lotm.entity.client.projectiles.frost_spear.FrostSpearProjectileRenderer;
 import de.jakob.lotm.entity.client.ability_entities.wheel_of_fortune_pathway.misfortune_words.MisfortuneWordsRenderer;
 import de.jakob.lotm.entity.client.avatar.ErrorAvatarRenderer;
 import de.jakob.lotm.entity.client.beyonder_npc.BeyonderNPCRenderer;
@@ -61,6 +62,7 @@ import de.jakob.lotm.entity.client.spirits.blue_wizard.SpiritBlueWizardRenderer;
 import de.jakob.lotm.entity.client.spirits.bubbles.SpiritBubblesRenderer;
 import de.jakob.lotm.entity.client.spirits.dervish.SpiritDervishRenderer;
 import de.jakob.lotm.entity.client.spirits.ghost.SpiritGhostRenderer;
+import de.jakob.lotm.entity.client.spirits.malmouth.SpiritMalmouthRenderer;
 import de.jakob.lotm.entity.client.spirits.spirit_bane.SpiritBaneRenderer;
 import de.jakob.lotm.entity.client.spirits.translucent_wizard.SpiritTranslucentWizardRenderer;
 import de.jakob.lotm.gamerule.ModGameRules;
@@ -259,6 +261,7 @@ public class LOTMCraft
             EntityRenderers.register(ModEntities.GRAFTING_LOCATION_ENTITY.get(), GraftingLocationRenderer::new);
             EntityRenderers.register(ModEntities.DAMAGE_TRACKER.get(), DamageTrackerRenderer::new);
             EntityRenderers.register(ModEntities.TIME_CHANGE.get(), TimeChangeRenderer::new);
+            EntityRenderers.register(ModEntities.SPIRIT_BALL.get(), SpiritBallRenderer::new);
 
             // Spirits
             EntityRenderers.register(ModEntities.SPIRIT_DERVISH_ENTITY.get(), SpiritDervishRenderer::new);
@@ -268,6 +271,7 @@ public class LOTMCraft
             EntityRenderers.register(ModEntities.SPIRIT_GHOST.get(), SpiritGhostRenderer::new);
             EntityRenderers.register(ModEntities.SPIRIT_BIZARRO_BANE.get(), SpiritBizarroBaneRenderer::new);
             EntityRenderers.register(ModEntities.SPIRIT_BANE.get(), SpiritBaneRenderer::new);
+            EntityRenderers.register(ModEntities.SPIRIT_MALMOUTH.get(), SpiritMalmouthRenderer::new);
 
 
             GuidingBookRenderer.loadPages(LOTMCraft.MOD_ID);

@@ -112,24 +112,10 @@ public class SpiritGhostEntity extends Animal {
         return false;
     }
 
-    private void setupAnimationStates() {
-        if (this.isFlying()) {
-            this.IDLE_ANIMATION.stop();
-            this.WALK_ANIMATION.startIfStopped(this.tickCount);
-        } else {
-            this.WALK_ANIMATION.stop();
-            this.IDLE_ANIMATION.startIfStopped(this.tickCount);
-        }
-    }
-
     @Override
     public void tick() {
         super.tick();
 
         Level level = this.level();
-
-        if(level.isClientSide) {
-            this.setupAnimationStates();
-        }
     }
 }

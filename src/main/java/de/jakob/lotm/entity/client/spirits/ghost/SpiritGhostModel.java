@@ -65,14 +65,14 @@ public class SpiritGhostModel<T extends SpiritGhostEntity> extends HierarchicalM
 			if (!entity.WALK_ANIMATION.isStarted()) {
 				entity.WALK_ANIMATION.start((int) ageInTicks);
 			}
-			this.animate(entity.WALK_ANIMATION, SpiritTranslucentWizardAnimations.WALK, ageInTicks, 1.0F);
+			this.animate(entity.WALK_ANIMATION, SpiritGhostAnimations.WALK, ageInTicks, 1.0F);
 		} else {
 			// Stop walk animation and start/continue idle animation
 			entity.WALK_ANIMATION.stop();
 			if (!entity.IDLE_ANIMATION.isStarted()) {
 				entity.IDLE_ANIMATION.start((int) ageInTicks);
 			}
-			this.animate(entity.IDLE_ANIMATION, SpiritTranslucentWizardAnimations.IDLE, ageInTicks, 1.0F);
+			this.animate(entity.IDLE_ANIMATION, SpiritGhostAnimations.IDLE, ageInTicks, 1.0F);
 		}
 	}
 

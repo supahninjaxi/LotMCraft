@@ -18,6 +18,7 @@ public class SpiritBizarroBaneRenderer extends MobRenderer<SpiritBizarroBaneEnti
     public void render(SpiritBizarroBaneEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         poseStack.pushPose();
 
+        poseStack.scale(2, 2, 2);
         poseStack.translate(0.0D, -.2D, 0.0D);
 
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);

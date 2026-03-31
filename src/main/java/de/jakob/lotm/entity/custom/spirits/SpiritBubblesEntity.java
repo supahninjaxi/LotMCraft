@@ -48,9 +48,8 @@ public class SpiritBubblesEntity extends Animal {
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0)
-                .add(Attributes.MOVEMENT_SPEED, 0.25)
-                .add(Attributes.FLYING_SPEED, 2)
-                .add(Attributes.SCALE, 1.35);
+                .add(Attributes.FLYING_SPEED, 4)
+                .add(Attributes.SCALE, 1);
     }
 
     @Override
@@ -84,8 +83,8 @@ public class SpiritBubblesEntity extends Animal {
     protected PathNavigation createNavigation(Level level) {
         FlyingPathNavigation flyingNavigation = new FlyingPathNavigation(this, level);
         flyingNavigation.setCanOpenDoors(false);
-        flyingNavigation.setCanFloat(false);
-        flyingNavigation.setCanPassDoors(false);
+        flyingNavigation.setCanFloat(true);
+        flyingNavigation.setCanPassDoors(true);
         return flyingNavigation;
     }
 

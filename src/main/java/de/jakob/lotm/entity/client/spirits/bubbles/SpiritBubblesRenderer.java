@@ -13,6 +13,8 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Random;
+
 public class SpiritBubblesRenderer extends MobRenderer<SpiritBubblesEntity, SpiritBubblesModel<SpiritBubblesEntity>> {
     public SpiritBubblesRenderer(EntityRendererProvider.Context context) {
         super(context, new SpiritBubblesModel<>(context.bakeLayer(SpiritBubblesModel.LAYER_LOCATION)), .3f);
@@ -27,8 +29,11 @@ public class SpiritBubblesRenderer extends MobRenderer<SpiritBubblesEntity, Spir
     public void render(SpiritBubblesEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         poseStack.pushPose();
 
-        poseStack.translate(0.0D, -.2D, 0.0D);
-        poseStack.scale(1.5f, 1.5f, 1.5f);
+        poseStack.translate(0, -.32, 0);
+
+        Random random = new Random(entity.getUUID().getMostSignificantBits() ^ entity.getUUID().getLeastSignificantBits());
+        float scale = 1f + random.nextFloat();
+        poseStack.scale(scale, scale, scale);
 
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
         poseStack.popPose();
