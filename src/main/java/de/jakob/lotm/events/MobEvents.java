@@ -1,6 +1,8 @@
 package de.jakob.lotm.events;
 
 import de.jakob.lotm.LOTMCraft;
+import de.jakob.lotm.entity.custom.BeyonderNPCEntity;
+import de.jakob.lotm.util.BeyonderData;
 import de.jakob.lotm.util.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -12,6 +14,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.NeoForgeConfig;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.MobDespawnEvent;
 import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 
@@ -23,8 +26,9 @@ public class MobEvents {
         var level = event.getLevel();
         if(!(level instanceof ServerLevel serverLevel)) return;
 
-        Entity entity = event.getEntity();
-        BlockPos pos = entity.getOnPos();
+        if(!(event.getEntity() instanceof BeyonderNPCEntity npc)) return;
+
+        BlockPos pos = npc.getOnPos();
 
         var biomeKey = level.getBiome(pos).unwrapKey();
 
@@ -33,6 +37,22 @@ public class MobEvents {
              if(biom.equals(biomeKey.get().location()))
                  event.setResult(MobSpawnEvent.PositionCheck.Result.FAIL);
             }
+        }
+        else if(!BeyonderData.beyonderMap.check(npc.getPathway(), npc.getSequence())){
+            event.setResult(MobSpawnEvent.PositionCheck.Result.FAIL);
+        }
+
+    }
+
+    @SubscribeEvent
+    public static void onEntityJoin(EntityJoinLevelEvent event) {
+        var level = event.getLevel();
+        if(!(level instanceof ServerLevel serverLevel)) return;
+
+        if(!(event.getEntity() instanceof BeyonderNPCEntity npc)) return;
+
+        if(!BeyonderData.beyonderMap.check(npc.getPathway(), npc.getSequence())){
+            event.setCanceled(true);
         }
     }
 
