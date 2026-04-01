@@ -3,6 +3,9 @@ package de.jakob.lotm.artifacts;
 import de.jakob.lotm.abilities.core.Ability;
 import de.jakob.lotm.abilities.core.SelectableAbility;
 import de.jakob.lotm.data.ModDataComponents;
+import de.jakob.lotm.item.ModItems;
+import de.jakob.lotm.potions.BeyonderCharacteristicItem;
+import de.jakob.lotm.potions.BeyonderCharacteristicItemHandler;
 import de.jakob.lotm.util.BeyonderData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -22,6 +25,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 public class SealedArtifactItem extends Item {
 
@@ -86,6 +90,7 @@ public class SealedArtifactItem extends Item {
         if (!(entity instanceof ServerPlayer player)) return;
 
         boolean generated = stack.getOrDefault(ModDataComponents.SEALED_ARTIFACT_GENERATED, false);
+        boolean failed = stack.getOrDefault(ModDataComponents.SEALED_ARTIFACT_GENERATED_FAILED, false);
         if (generated) return;
 
         String baseType = stack.get(ModDataComponents.SEALED_ARTIFACT_BASE_TYPE);
@@ -94,10 +99,19 @@ public class SealedArtifactItem extends Item {
 
         if(baseType == null || sequence == null || path == null) return;
 
-        SealedArtifactData data = SealedArtifactHandler.createSealedArtifactData(path, sequence, baseType);
+        if(!failed){
+            SealedArtifactData data = SealedArtifactHandler.createSealedArtifactData(path, sequence, baseType);
 
-        stack.set(ModDataComponents.SEALED_ARTIFACT_DATA, data);
-        stack.set(ModDataComponents.SEALED_ARTIFACT_GENERATED, true);
+            stack.set(ModDataComponents.SEALED_ARTIFACT_DATA, data);
+            stack.set(ModDataComponents.SEALED_ARTIFACT_GENERATED, true);
+        }
+        else{
+            ItemStack newStack = new ItemStack(Objects.requireNonNull(BeyonderCharacteristicItemHandler
+                    .selectCharacteristicOfPathwayAndSequence(path, sequence)));
+
+            player.getInventory().setItem(slot, newStack);
+        }
+
     }
 
 // ── Sections ────────────────────────────────────────────────

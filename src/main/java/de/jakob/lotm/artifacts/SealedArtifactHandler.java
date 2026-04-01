@@ -107,7 +107,8 @@ public class SealedArtifactHandler {
                 || (validAbility instanceof CogitationAbility)
                 || (validAbility instanceof AngelFlightAbility)
                 || (validAbility instanceof MythicalCreatureFormAbility)
-                || (validAbility instanceof MirrorWorldTraversalAbility)) {
+                || (validAbility instanceof MirrorWorldTraversalAbility)
+                || !validAbility.canBeCopied) {
             return getPathwayAbilities(pathway, targetSequence + 1, exact, excluded);
         }
 
