@@ -87,10 +87,9 @@ public class ModEvents {
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 (entityType, level, spawnType, pos, random) -> {
                     // Get the ServerLevel to access gamerules
-                    if (level.getLevel() instanceof ServerLevel serverLevel) {
-                        if (!serverLevel.getGameRules().getBoolean(ModGameRules.ALLOW_BEYONDER_SPAWNING)) {
-                            return false;
-                        }
+                    ServerLevel serverLevel = level.getLevel();
+                    if (!serverLevel.getGameRules().getBoolean(ModGameRules.ALLOW_BEYONDER_SPAWNING)) {
+                        return false;
                     }
 
                     // Then check the normal mob spawn rules
