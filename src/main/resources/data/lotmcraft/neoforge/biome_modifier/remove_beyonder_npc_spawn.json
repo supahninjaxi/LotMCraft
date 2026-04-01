@@ -3,7 +3,6 @@
   "biomes": [
     "minecraft:mushroom_fields",
     "minecraft:deep_dark"
-
   ],
   "entity_types": "lotmcraft:beyonder_npc"
 }

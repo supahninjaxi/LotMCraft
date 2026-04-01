@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class AbilityTheftAbility extends SelectableAbility {
     public AbilityTheftAbility(String id) {
-        super(id, 3);
+        super(id, 1.5f);
     }
 
     @Override

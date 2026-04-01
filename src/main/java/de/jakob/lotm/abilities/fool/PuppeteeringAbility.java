@@ -143,8 +143,8 @@ public class PuppeteeringAbility extends Ability {
         if(BeyonderData.isBeyonder(target)) {
             int targetSequence = BeyonderData.getSequence(target);
 
-            if(targetSequence < sequence) {
-                if((targetSequence <= 4 && sequence >= 5) || (targetSequence <= 2 && sequence >= 3) || (targetSequence == 0)) {
+            if(targetSequence <= sequence) {
+                if(AbilityUtil.isTargetSignificantlyStronger(entity, target)) {
                     entity.addEffect(new MobEffectInstance(ModEffects.LOOSING_CONTROL, 20 * 8, 5, false, false, false));
                     return;
                 }

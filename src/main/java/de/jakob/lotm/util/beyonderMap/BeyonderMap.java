@@ -271,7 +271,6 @@ public class BeyonderMap extends SavedData {
             if(obj.pathway().equals(path) && obj.sequence() == seq){
                 res++;
 
-                LOTMCraft.LOGGER.info("Name: {}, stacks: {}", obj.trueName(), obj.charStack());
                 res += obj.charStack().get(seq);
             }
         }

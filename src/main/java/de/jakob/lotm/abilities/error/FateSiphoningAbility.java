@@ -16,6 +16,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
@@ -57,6 +58,12 @@ public class FateSiphoningAbility extends Ability {
         LivingEntity target = AbilityUtil.getTargetEntity(entity, 30, 2);
         if(target == null) {
             AbilityUtil.sendActionBar(entity, Component.translatable("ability.lotmcraft.fate_siphoning.no_target").withColor(0x6d32a8));
+            return;
+        }
+
+        if(linkedEntities.containsKey(target.getUUID()) &&
+                linkedEntities.get(target.getUUID()).equals(entity.getUUID())){
+            AbilityUtil.sendActionBar(entity, Component.translatable("ability.lotmcraft.fate_siphoning.resisted").withColor(0x6d32a8));
             return;
         }
 
@@ -139,6 +146,30 @@ public class FateSiphoningAbility extends Ability {
 
             targetLiving.addEffect(new MobEffectInstance(effect));
         }
+    }
 
+    @SubscribeEvent
+    public static void onEffectApply(MobEffectEvent.Applicable event) {
+        Entity entity = event.getEntity();
+        if(!(entity.level() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+
+        if(!(entity instanceof ServerPlayer player))
+            return;
+
+        if(!linkedEntities.containsKey(player.getUUID())) {
+            return;
+        }
+
+        MobEffectInstance effect = event.getEffectInstance();
+
+        if (effect.getEffect().value().isBeneficial()) return;
+
+        Entity targetEntity = serverLevel.getEntity(linkedEntities.get(player.getUUID()));
+
+        if (!(targetEntity instanceof LivingEntity target)) return;
+        event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+        target.addEffect(new MobEffectInstance(effect));
     }
 }

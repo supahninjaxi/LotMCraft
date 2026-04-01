@@ -456,8 +456,6 @@ public class TheftHandler {
         float sanityToSteal = getSeqDifferenceMultiplier(BeyonderData.getSequence(entity), BeyonderData.getSequence(target))
                 + (float) (BeyonderData.getMultiplier(entity) / 20);
 
-        LOTMCraft.LOGGER.info("SanityToSteal: {}", sanityToSteal);
-
         var targetSanity = target.getData(ModAttachments.SANITY_COMPONENT);
         var entitySanity = entity.getData(ModAttachments.SANITY_COMPONENT);
 
@@ -488,8 +486,7 @@ public class TheftHandler {
         BeyonderData.digest((ServerPlayer) target, (-digestionToSteal), false);
 
         int diff = Math.min(targetSeq - userSeq, 0)/10;
-        LOTMCraft.LOGGER.info("Digestion value: {}", (digestionToSteal * (1.0f + diff)));
 
-        BeyonderData.digest((ServerPlayer) entity, (digestionToSteal * (1.0f + diff)), false);
+        BeyonderData.digest((ServerPlayer) entity, (digestionToSteal * (0.1f + diff)), false);
     }
 }
