@@ -3,6 +3,7 @@ package de.jakob.lotm.artifacts;
 import de.jakob.lotm.abilities.core.Ability;
 import de.jakob.lotm.abilities.core.SelectableAbility;
 import de.jakob.lotm.data.ModDataComponents;
+import de.jakob.lotm.gamerule.ModGameRules;
 import de.jakob.lotm.item.ModItems;
 import de.jakob.lotm.potions.BeyonderCharacteristicItem;
 import de.jakob.lotm.potions.BeyonderCharacteristicItemHandler;
@@ -39,6 +40,12 @@ public class SealedArtifactItem extends Item {
 
         if(level.isClientSide) {
             return InteractionResultHolder.success(stack);
+        }
+
+        if(!level.getGameRules().getBoolean(ModGameRules.ALLOW_ARTIFACTS)){
+            player.setItemInHand(hand, ItemStack.EMPTY);
+
+            return InteractionResultHolder.success(ItemStack.EMPTY);
         }
 
         SealedArtifactData data = stack.get(ModDataComponents.SEALED_ARTIFACT_DATA);

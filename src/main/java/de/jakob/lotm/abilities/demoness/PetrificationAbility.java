@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class PetrificationAbility extends SelectableAbility {
     public PetrificationAbility(String id) {
-        super(id, 5);
+        super(id, 120);
     }
 
     @Override

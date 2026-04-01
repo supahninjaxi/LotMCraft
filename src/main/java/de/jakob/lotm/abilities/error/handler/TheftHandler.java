@@ -461,8 +461,6 @@ public class TheftHandler {
         float targetSanityValue = targetSanity.getSanity();
         float userSanityValue = entitySanity.getSanity();
 
-        LOTMCraft.LOGGER.info("sanSt: {}, tar: {}, user: {}", sanityToSteal, targetSanityValue, userSanityValue);
-
         targetSanity.setSanityAndSync(Math.max(targetSanityValue - baseSanity, 0.0f), target);
         entitySanity.setSanityAndSync(Math.max(userSanityValue + (sanityToSteal/2.0f), 1.0f), entity);
     }
@@ -485,8 +483,6 @@ public class TheftHandler {
         float baseDigestion = (float)(BeyonderData.getMultiplier(entity) / 20);
         float multiplier = getSeqDifferenceMultiplier(userSeq, targetSeq);
         float digestionToSteal = baseDigestion * multiplier;
-
-        LOTMCraft.LOGGER.info("base: {}, mult: {}, ds: {}", baseDigestion, multiplier, digestionToSteal);
 
         BeyonderData.digest((ServerPlayer) target, -baseDigestion, false);
         BeyonderData.digest((ServerPlayer) entity, (digestionToSteal/2.0f), false);
