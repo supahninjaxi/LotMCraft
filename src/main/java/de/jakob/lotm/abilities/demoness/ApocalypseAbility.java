@@ -20,6 +20,7 @@ import java.util.Map;
 public class ApocalypseAbility extends Ability {
     public ApocalypseAbility(String id) {
         super(id, 10);
+        this.canBeCopied = false;
     }
 
     @Override

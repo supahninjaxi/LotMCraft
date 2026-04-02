@@ -16,6 +16,7 @@ import java.util.Map;
 public class BlackHoleAbility extends Ability {
     public BlackHoleAbility(String id) {
         super(id, 20 * 60 * 2);
+        canBeCopied = false;
     }
 
     @Override

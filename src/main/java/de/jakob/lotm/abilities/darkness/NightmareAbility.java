@@ -58,6 +58,7 @@ public class NightmareAbility extends SelectableAbility {
 
         canBeCopied = false;
         canBeUsedByNPC = false;
+        canBeReplicated = false;
     }
 
     @Override

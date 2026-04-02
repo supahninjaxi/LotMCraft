@@ -33,6 +33,8 @@ public class CurseAbility extends Ability {
         super(id, 1.5f, "curse");
 
         canBeUsedByNPC = false;
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

@@ -21,6 +21,8 @@ import java.util.Map;
 public class MentalPlagueAbility extends Ability {
     public MentalPlagueAbility(String id) {
         super(id, 20);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

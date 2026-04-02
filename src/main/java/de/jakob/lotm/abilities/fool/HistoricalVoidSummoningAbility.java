@@ -91,6 +91,8 @@ public class HistoricalVoidSummoningAbility extends SelectableAbility {
         canBeCopied = false;
         canBeUsedByNPC = false;
         cannotBeStolen = true;
+        canBeReplicated = false;
+        canBeUsedInArtifact = false;
     }
 
     @Override

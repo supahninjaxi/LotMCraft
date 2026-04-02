@@ -13,6 +13,10 @@ import java.util.Map;
 public class MindInvasionAbility extends Ability {
     public MindInvasionAbility(String id) {
         super(id, 10);
+
+        //till implemented
+        cannotBeStolen =true;
+        canBeUsedInArtifact = false;
     }
 
     @Override

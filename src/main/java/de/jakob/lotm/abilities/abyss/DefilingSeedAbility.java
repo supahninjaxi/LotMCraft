@@ -71,7 +71,9 @@ public class DefilingSeedAbility extends Ability {
     );
 
     public DefilingSeedAbility(String id) {
-        super(id, 2);
+        super(id, 5);
+        this.canBeCopied = false;
+
     }
 
     @Override

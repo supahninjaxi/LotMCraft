@@ -34,6 +34,8 @@ import java.util.Random;
 public class ProphecyAbility extends Ability {
     public ProphecyAbility(String id) {
         super(id, 4);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

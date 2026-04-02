@@ -32,6 +32,7 @@ import java.util.Set;
 public class ConcealmentAbility extends SelectableAbility {
     public ConcealmentAbility(String id) {
         super(id, 5);
+        this.canBeCopied = false;
     }
 
     @Override

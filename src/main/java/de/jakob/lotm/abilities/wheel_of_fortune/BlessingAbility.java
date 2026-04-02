@@ -23,6 +23,7 @@ public class BlessingAbility extends Ability {
         super(id, 4);
 
         canBeUsedByNPC = false;
+        canBeCopied = false;
     }
 
     @Override

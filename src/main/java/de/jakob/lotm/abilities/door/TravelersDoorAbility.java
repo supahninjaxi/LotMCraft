@@ -30,6 +30,7 @@ public class TravelersDoorAbility extends SelectableAbility {
         super(id, 3);
 
         canBeUsedByNPC = false;
+        canBeCopied = false;
     }
 
     @Override

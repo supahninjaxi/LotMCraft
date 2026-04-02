@@ -32,6 +32,7 @@ public class CrossbreedingAbility extends Ability {
 
         canBeUsedByNPC = false;
         canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

@@ -22,6 +22,8 @@ import java.util.Map;
 public class TimeManipulationAbility extends SelectableAbility {
     public TimeManipulationAbility(String id) {
         super(id, 17);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

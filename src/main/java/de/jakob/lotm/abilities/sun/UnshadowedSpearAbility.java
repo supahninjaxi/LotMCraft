@@ -18,6 +18,7 @@ public class UnshadowedSpearAbility extends Ability {
     public UnshadowedSpearAbility(String id) {
         super(id, 1, "purification", "light_source", "light_strong", "light_weak");
         postsUsedAbilityEventManually = true;
+        canBeCopied = false;
     }
 
     @Override

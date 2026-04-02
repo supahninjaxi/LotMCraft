@@ -22,6 +22,7 @@ public class DecryptionAbility extends ToggleAbility {
 
         canBeCopied = false;
         canBeUsedByNPC = false;
+        canBeReplicated = false;
     }
 
     @Override

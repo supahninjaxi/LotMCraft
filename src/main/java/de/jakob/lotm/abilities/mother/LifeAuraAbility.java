@@ -30,6 +30,7 @@ public class LifeAuraAbility extends ToggleAbility {
         super(id);
 
         canBeUsedByNPC = false;
+        canBeCopied = false;
     }
 
     @Override

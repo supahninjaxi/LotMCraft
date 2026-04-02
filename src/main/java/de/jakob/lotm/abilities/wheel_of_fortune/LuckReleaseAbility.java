@@ -19,6 +19,9 @@ import java.util.Map;
 public class LuckReleaseAbility extends Ability {
     public LuckReleaseAbility(String id) {
         super(id, 120);
+        canBeCopied = false;
+        canBeReplicated = false;
+        canBeUsedInArtifact = false;
     }
 
     @Override

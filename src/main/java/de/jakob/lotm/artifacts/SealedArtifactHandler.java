@@ -101,14 +101,7 @@ public class SealedArtifactHandler {
         }
 
         // If no ability found at target sequence, try higher sequences
-        if ((validAbility == null)
-                || (validAbility instanceof ConqueringAbility)
-                || (validAbility instanceof AllyAbility)
-                || (validAbility instanceof CogitationAbility)
-                || (validAbility instanceof AngelFlightAbility)
-                || (validAbility instanceof MythicalCreatureFormAbility)
-                || (validAbility instanceof MirrorWorldTraversalAbility)
-                || !validAbility.canBeCopied) {
+        if ((validAbility == null) || !validAbility.canBeUsedInArtifact) {
             return getPathwayAbilities(pathway, targetSequence + 1, exact, excluded);
         }
 

@@ -34,6 +34,7 @@ public class ReplicatingAbility extends SelectableAbility {
         canBeCopied = false;
         canBeUsedByNPC = false;
         cannotBeStolen = true;
+        canBeReplicated = false;
     }
 
     @Override
@@ -102,7 +103,7 @@ public class ReplicatingAbility extends SelectableAbility {
             hasReplicatedAbility.set(true);
             book.discard();
 
-            if (!usedAbility.canBeCopied) {
+            if (!usedAbility.canBeReplicated) {
                 AbilityUtil.sendActionBar(entity, Component.translatable("ability.lotmcraft.replicating.cannot_copy").withColor(0xFF8ff4ff));
                 level.playSound(null, BlockPos.containing(entity.position()), SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 1, 1);
                 ParticleUtil.spawnParticles(serverLevel, ParticleTypes.PORTAL, pos, 45, .3, .02);

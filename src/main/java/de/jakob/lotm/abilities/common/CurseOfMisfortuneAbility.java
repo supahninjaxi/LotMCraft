@@ -21,7 +21,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class CurseOfMisfortuneAbility extends Ability {
     public CurseOfMisfortuneAbility(String id) {
-        super(id, 10);
+        super(id, 12);
+        this.canBeCopied = false;
     }
 
     @Override
@@ -71,6 +72,6 @@ public class CurseOfMisfortuneAbility extends Ability {
         if (amplifier <= 0) {
             return; // Full resistance – curse has no meaningful effect
         }
-        target.addEffect(new MobEffectInstance(ModEffects.UNLUCK, 20 * 60 * 17, amplifier));
+        target.addEffect(new MobEffectInstance(ModEffects.UNLUCK, 20 * 60 * (2 * amplifier), amplifier));
     }
 }

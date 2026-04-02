@@ -24,6 +24,7 @@ import java.util.Map;
 public class SleepInducementAbility extends Ability {
     public SleepInducementAbility(String id) {
         super(id, 2);
+        canBeCopied = false;
     }
 
     @Override

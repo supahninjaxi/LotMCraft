@@ -32,6 +32,8 @@ public class PlayerTeleportationAbility extends SelectableAbility {
         super(id, 2);
 
         canBeUsedByNPC = false;
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

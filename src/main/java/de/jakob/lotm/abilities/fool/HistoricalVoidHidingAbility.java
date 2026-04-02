@@ -1,11 +1,13 @@
 package de.jakob.lotm.abilities.fool;
 
 import com.zigythebird.playeranimcore.math.Vec3f;
+import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.abilities.core.ToggleAbility;
 import de.jakob.lotm.attachments.DisabledAbilitiesComponent;
 import de.jakob.lotm.attachments.FogComponent;
 import de.jakob.lotm.attachments.ModAttachments;
 import de.jakob.lotm.attachments.TransformationComponent;
+import de.jakob.lotm.effect.ModEffects;
 import de.jakob.lotm.util.helper.AbilityUtil;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -15,11 +17,15 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.FlintAndSteelItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class HistoricalVoidHidingAbility extends ToggleAbility {
     private final HashMap<UUID, Vec3> locations = new HashMap<>();
 
@@ -28,6 +34,9 @@ public class HistoricalVoidHidingAbility extends ToggleAbility {
 
         canAlwaysBeUsed = true;
         cannotBeStolen = true;
+        canBeCopied = false;
+        canBeReplicated = false;
+        canBeUsedInArtifact = false;
     }
 
     @Override
@@ -107,6 +116,20 @@ public class HistoricalVoidHidingAbility extends ToggleAbility {
         if(transformationComponent.isTransformed() && transformationComponent.getTransformationIndex() == TransformationComponent.TransformationType.FOG_OF_HISTORY.getIndex()) {
             transformationComponent.setTransformedAndSync(false, entity);
         }
+
+    }
+
+    @SubscribeEvent
+    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
+        if(!(event.getEntity().level() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+
+        LivingEntity entity = event.getEntity();
+
+        TransformationComponent transformationComponent = entity.getData(ModAttachments.TRANSFORMATION_COMPONENT);
+        if (transformationComponent.isTransformed() && transformationComponent.getTransformationIndex() == TransformationComponent.TransformationType.FOG_OF_HISTORY.getIndex())
+            event.setCanceled(true);
 
     }
 }

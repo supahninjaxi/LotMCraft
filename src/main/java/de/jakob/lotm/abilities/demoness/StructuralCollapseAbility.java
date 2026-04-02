@@ -23,7 +23,8 @@ import java.util.Map;
 
 public class StructuralCollapseAbility extends Ability {
     public StructuralCollapseAbility(String id) {
-        super(id, 3);
+        super(id, 15);
+        canBeCopied = false;
     }
 
     @Override

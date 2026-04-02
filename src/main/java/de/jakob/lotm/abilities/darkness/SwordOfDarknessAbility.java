@@ -31,6 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SwordOfDarknessAbility extends Ability {
     public SwordOfDarknessAbility(String id) {
         super(id, 2);
+        this.canBeCopied = false;
     }
 
     @Override

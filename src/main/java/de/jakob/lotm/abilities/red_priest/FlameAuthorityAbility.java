@@ -24,6 +24,7 @@ import java.util.Map;
 public class FlameAuthorityAbility extends SelectableAbility {
     public FlameAuthorityAbility(String id) {
         super(id, 2.5f);
+        canBeCopied = false;
     }
 
     @Override

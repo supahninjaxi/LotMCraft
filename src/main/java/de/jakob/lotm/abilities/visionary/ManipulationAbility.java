@@ -13,6 +13,10 @@ import java.util.Map;
 public class ManipulationAbility extends Ability {
     public ManipulationAbility(String id) {
         super(id, 30);
+
+        //till implemented
+        cannotBeStolen = true;
+        canBeUsedInArtifact = true;
     }
 
     @Override

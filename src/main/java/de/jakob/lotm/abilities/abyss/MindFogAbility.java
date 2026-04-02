@@ -25,6 +25,8 @@ public class MindFogAbility extends ToggleAbility {
     public MindFogAbility(String id) {
         super(id);
         canBeUsedByNPC = false;
+        this.canBeCopied = false;
+        this.canBeReplicated = false;
     }
 
     @Override

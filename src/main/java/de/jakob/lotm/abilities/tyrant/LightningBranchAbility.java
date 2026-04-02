@@ -13,6 +13,7 @@ import java.util.Map;
 public class LightningBranchAbility extends Ability {
     public LightningBranchAbility(String id) {
         super(id, 1.5f);
+        canBeCopied = false;
     }
 
     @Override

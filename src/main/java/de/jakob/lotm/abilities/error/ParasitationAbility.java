@@ -35,6 +35,9 @@ public class ParasitationAbility extends ToggleAbility {
         super(id);
 
         canBeUsedByNPC = false;
+        canBeCopied = false;
+        canBeReplicated = false;
+        canBeUsedInArtifact = false;
     }
 
     @Override

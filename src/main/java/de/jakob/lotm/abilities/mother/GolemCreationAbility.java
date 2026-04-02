@@ -15,7 +15,8 @@ import java.util.Map;
 
 public class GolemCreationAbility extends Ability {
     public GolemCreationAbility(String id) {
-        super(id, 4);
+        super(id, 10);
+        canBeCopied = false;
     }
 
     @Override

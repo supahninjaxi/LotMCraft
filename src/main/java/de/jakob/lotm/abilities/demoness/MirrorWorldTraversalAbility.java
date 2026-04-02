@@ -34,6 +34,8 @@ public class MirrorWorldTraversalAbility extends Ability {
 
         canBeCopied = false;
         canBeUsedByNPC = false;
+        canBeReplicated = false;
+        canBeUsedInArtifact = false;
     }
 
     @Override

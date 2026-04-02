@@ -24,6 +24,8 @@ import java.util.Map;
 public class SirenSongAbility extends SelectableAbility {
     public SirenSongAbility(String id) {
         super(id, 45);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

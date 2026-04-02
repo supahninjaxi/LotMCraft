@@ -4,6 +4,7 @@ import de.jakob.lotm.abilities.error.DeceitAbility;
 import de.jakob.lotm.attachments.ModAttachments;
 import de.jakob.lotm.attachments.ParasitationComponent;
 import de.jakob.lotm.damage.ModDamageTypes;
+import de.jakob.lotm.effect.ModEffects;
 import de.jakob.lotm.entity.custom.AvatarEntity;
 import de.jakob.lotm.entity.custom.BeyonderNPCEntity;
 import de.jakob.lotm.entity.custom.TimeChangeEntity;
@@ -233,6 +234,10 @@ public class AbilityUtil {
         // Still check these even for support abilities
         if (DeceitAbility.cannotBeTargeted.contains(target.getUUID()) &&
                 BeyonderData.getSequence(source) > BeyonderData.getSequence(target)) {
+            return false;
+        }
+
+        if(target.hasEffect(ModEffects.PETRIFICATION)){
             return false;
         }
 

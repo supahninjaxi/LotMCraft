@@ -45,6 +45,8 @@ CorruptingVoiceAbility extends ToggleAbility {
     public CorruptingVoiceAbility(String id) {
         super(id);
         canBeUsedByNPC = false;
+        this.canBeCopied = false;
+        this.canBeReplicated = false;
     }
 
     @Override

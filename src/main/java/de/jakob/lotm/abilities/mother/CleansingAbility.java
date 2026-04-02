@@ -19,6 +19,7 @@ import java.util.Map;
 public class CleansingAbility extends SelectableAbility {
     public CleansingAbility(String id) {
         super(id, 20, "cleansing");
+        canBeCopied = false;
     }
 
     @Override

@@ -42,6 +42,7 @@ public class PuppeteeringAbility extends Ability {
         super(id, 1);
 
         canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

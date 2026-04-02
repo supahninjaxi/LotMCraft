@@ -29,6 +29,8 @@ import java.util.UUID;
 public class BattleHypnosisAbility extends Ability {
     public BattleHypnosisAbility(String id) {
         super(id, 2);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

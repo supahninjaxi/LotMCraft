@@ -32,6 +32,8 @@ public class ShadowConcealmentAbility extends Ability {
 
     public ShadowConcealmentAbility(String id) {
         super(id, 45);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

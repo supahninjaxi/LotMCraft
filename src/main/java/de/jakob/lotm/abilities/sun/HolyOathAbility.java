@@ -16,6 +16,8 @@ import java.util.Map;
 public class HolyOathAbility extends ToggleAbility {
     public HolyOathAbility(String id) {
         super(id, "morale_boost");
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

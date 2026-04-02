@@ -25,6 +25,9 @@ public class SolarEnvoyAbility extends ToggleAbility {
 
     public SolarEnvoyAbility(String id) {
         super(id, "light_strong", "light_weak");
+        canBeCopied = false;
+        canBeReplicated = false;
+        canBeUsedInArtifact = false;
     }
 
     @Override

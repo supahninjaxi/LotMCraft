@@ -31,7 +31,10 @@ public class DoorSubstitutionAbility extends Ability {
     private static final HashMap<UUID, Integer> figurineNumbers = new HashMap<>();
 
     public DoorSubstitutionAbility(String id) {
-        super(id, 5f);
+        super(id, 10f);
+        canBeCopied = false;
+        canBeReplicated = false;
+        canBeUsedInArtifact = false;
     }
 
     @Override

@@ -37,9 +37,9 @@ public class PoisonousFlameAbility extends Ability {
 
     @Override
     public Map<String, Integer> getRequirements() {
-        Map<String, Integer> reqs = new HashMap<>();
-        reqs.put("abyss", 8);
-        return reqs;
+        return new HashMap<>(Map.of(
+                "abyss", 8
+        ));
     }
 
     @Override

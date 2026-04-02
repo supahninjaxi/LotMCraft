@@ -28,6 +28,7 @@ public class WarCryAbility extends Ability {
         super(id, 3, "morale_boost");
         interactionRadius = 19;
         interactionCacheTicks = 20 * 12;
+        canBeCopied = false;
     }
 
     @Override

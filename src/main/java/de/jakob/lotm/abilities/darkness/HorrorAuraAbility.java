@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class HorrorAuraAbility extends Ability {
     public HorrorAuraAbility(String id) {
         super(id, 30);
+        this.canBeCopied = false;
     }
 
     @Override

@@ -27,6 +27,7 @@ import java.util.UUID;
 public class NightDomainAbility extends Ability {
     public NightDomainAbility(String id) {
         super(id, 30);
+        this.canBeCopied = false;
     }
 
     @Override

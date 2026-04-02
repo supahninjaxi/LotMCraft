@@ -23,7 +23,9 @@ import java.util.stream.Collectors;
 
 public class SpiritualBaptismAbility extends Ability {
     public SpiritualBaptismAbility(String id) {
-        super(id, 6, "cleansing");
+        super(id, 10, "cleansing");
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

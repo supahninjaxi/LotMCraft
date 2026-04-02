@@ -26,7 +26,9 @@ public class DesireControlAbility extends SelectableAbility {
     private static final Set<UUID> targetedEntities = new HashSet<>();
 
     public DesireControlAbility(String id) {
-        super(id, 2.0f);
+        super(id, 5.0f);
+        this.canBeCopied = false;
+        this.canBeReplicated = false;
     }
 
     @Override

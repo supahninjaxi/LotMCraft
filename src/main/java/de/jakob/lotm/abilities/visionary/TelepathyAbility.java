@@ -20,6 +20,8 @@ import java.util.Map;
 public class TelepathyAbility extends ToggleAbility {
     public TelepathyAbility(String id) {
         super(id);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

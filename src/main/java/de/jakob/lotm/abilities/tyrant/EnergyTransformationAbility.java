@@ -15,6 +15,9 @@ import java.util.Map;
 public class EnergyTransformationAbility extends ToggleAbility {
     public EnergyTransformationAbility(String id) {
         super(id);
+        canBeCopied = false;
+        canBeReplicated = false;
+        canBeUsedInArtifact = false;
     }
 
     @Override

@@ -14,6 +14,10 @@ import java.util.Map;
 public class HostControllingAbility extends SelectableAbility {
     public HostControllingAbility(String id) {
         super(id, .5f);
+        canBeCopied = false;
+        canBeReplicated = false;
+        canBeUsedInArtifact = false;
+        canAlwaysBeUsed = true;
     }
 
     @Override

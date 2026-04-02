@@ -17,6 +17,8 @@ import java.util.Map;
 public class DreamTraversalAbility extends Ability {
     public DreamTraversalAbility(String id) {
         super(id, .5f);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

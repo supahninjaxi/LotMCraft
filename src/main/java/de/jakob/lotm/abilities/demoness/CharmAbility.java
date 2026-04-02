@@ -39,6 +39,9 @@ public class CharmAbility extends Ability {
 
     public CharmAbility(String id) {
         super(id, 2, "charm");
+
+        this.canBeCopied = false;
+        this.canBeReplicated = false;
     }
 
     @Override
