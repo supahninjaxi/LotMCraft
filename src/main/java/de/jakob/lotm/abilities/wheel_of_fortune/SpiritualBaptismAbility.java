@@ -43,7 +43,7 @@ public class SpiritualBaptismAbility extends SelectableAbility {
     protected String[] getAbilityNames() {
         return new String[]{
                 "ability.lotmcraft.spiritual_baptism.on_self",
-                "ability.lotmcraft.spiritual_baptism.target"
+                "ability.lotmcraft.spiritual_baptism.on_target"
         };
     }
 
