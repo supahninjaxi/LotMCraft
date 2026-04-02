@@ -43,7 +43,7 @@ CorruptingVoiceAbility extends ToggleAbility {
     private static final Map<UUID, Long> chatCooldowns = new ConcurrentHashMap<>();
 
     public CorruptingVoiceAbility(String id) {
-        super(id);
+        super(id, "corruption");
         canBeUsedByNPC = false;
         this.canBeCopied = false;
         this.canBeReplicated = false;

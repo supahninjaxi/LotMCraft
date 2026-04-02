@@ -1,5 +1,6 @@
 package de.jakob.lotm.abilities.abyss;
 
+import de.jakob.lotm.abilities.core.AbilityUsedEvent;
 import de.jakob.lotm.abilities.core.SelectableAbility;
 import de.jakob.lotm.damage.ModDamageTypes;
 import de.jakob.lotm.effect.ModEffects;
@@ -16,6 +17,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.common.NeoForge;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
@@ -59,6 +61,8 @@ public class LanguageOfFoulnessAbility extends SelectableAbility {
 
         ParticleUtil.spawnParticles(serverLevel, dust, target.getEyePosition(), 120, .5, .5, .5, 0.1);
         ParticleUtil.spawnParticles(serverLevel, ParticleTypes.SMOKE, target.getEyePosition(), 120, .5, .5, .5, 0.1);
+
+
 
         switch (abilityIndex) {
             case 0 -> castSlow(serverLevel, entity, target);

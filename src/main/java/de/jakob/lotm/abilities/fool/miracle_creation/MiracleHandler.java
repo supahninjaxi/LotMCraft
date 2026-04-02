@@ -4,7 +4,11 @@ import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.attachments.ModAttachments;
 import de.jakob.lotm.attachments.SanityComponent;
 import de.jakob.lotm.entity.ModEntities;
-import de.jakob.lotm.entity.custom.*;
+import de.jakob.lotm.entity.custom.ability_entities.MeteorEntity;
+import de.jakob.lotm.entity.custom.ability_entities.TimeChangeEntity;
+import de.jakob.lotm.entity.custom.ability_entities.TornadoEntity;
+import de.jakob.lotm.entity.custom.ability_entities.VolcanoEntity;
+import de.jakob.lotm.entity.custom.ability_entities.tyrant_pathway.GiantLightningEntity;
 import de.jakob.lotm.network.PacketHandler;
 import de.jakob.lotm.network.packets.toClient.DarknessEffectPacket;
 import de.jakob.lotm.network.packets.toClient.HotGroundEffectPacket;
@@ -279,7 +283,7 @@ public class MiracleHandler {
 
         EffectManager.playEffect(EffectManager.Effect.MIRACLE, targetLoc.x, targetLoc.y, targetLoc.z, level);
 
-        MeteorEntity meteor = new MeteorEntity(level, 3.25f,  (float) DamageLookup.lookupDamage(2, 1) * (float) BeyonderData.getMultiplier(caster), 6, caster, BeyonderData.isGriefingEnabled(caster), 20, 34);
+        MeteorEntity meteor = new MeteorEntity(level, 3.25f,  (float) DamageLookup.lookupDamage(2, 1) * (float) BeyonderData.getMultiplier(caster), 6, caster, BeyonderData.isGriefingEnabled(caster), 17, 45);
         meteor.setPosition(targetLoc);
         level.addFreshEntity(meteor);
     }

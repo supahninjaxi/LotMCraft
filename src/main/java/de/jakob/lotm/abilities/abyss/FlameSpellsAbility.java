@@ -1,8 +1,9 @@
 package de.jakob.lotm.abilities.abyss;
 
+import de.jakob.lotm.abilities.core.AbilityUsedEvent;
 import de.jakob.lotm.abilities.core.SelectableAbility;
 import de.jakob.lotm.damage.ModDamageTypes;
-import de.jakob.lotm.entity.custom.FireballEntity;
+import de.jakob.lotm.entity.custom.projectiles.FireballEntity;
 import de.jakob.lotm.util.BeyonderData;
 import de.jakob.lotm.util.helper.AbilityUtil;
 import de.jakob.lotm.util.helper.DamageLookup;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +28,7 @@ import java.util.Map;
 public class FlameSpellsAbility extends SelectableAbility {
 
     public FlameSpellsAbility(String id) {
-        super(id, 2.75f);
+        super(id, 1.75f, "burning");
     }
 
     @Override
@@ -83,6 +85,8 @@ public class FlameSpellsAbility extends SelectableAbility {
         AbilityUtil.getBlocksInCircleOutline((ServerLevel) level, startPos.subtract(0, 1, 0), 3).forEach(b -> {
             spawnFallingBlocks(level, startPos, b, griefing);
         });
+
+        NeoForge.EVENT_BUS.post(new AbilityUsedEvent((ServerLevel) level, startPos, entity, this, new String[]{"explosion", "burning"}, 4, 20));
     }
 
     private void spawnFallingBlocks(Level level, Vec3 startPos, BlockPos b, boolean griefing) {

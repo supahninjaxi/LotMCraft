@@ -2,6 +2,7 @@ package de.jakob.lotm.abilities.demoness;
 
 import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.abilities.core.Ability;
+import de.jakob.lotm.abilities.core.AbilityUsedEvent;
 import de.jakob.lotm.attachments.DisabledAbilitiesComponent;
 import de.jakob.lotm.attachments.ModAttachments;
 import de.jakob.lotm.effect.ModEffects;
@@ -25,6 +26,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 
 import java.util.HashMap;
@@ -38,7 +40,7 @@ public class CharmAbility extends Ability {
     private static final HashSet<UUID> onCharmedCooldown = new HashSet<>();
 
     public CharmAbility(String id) {
-        super(id, 2, "charm");
+        super(id, 2);
 
         this.canBeCopied = false;
         this.canBeReplicated = false;

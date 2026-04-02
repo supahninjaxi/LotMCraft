@@ -1,9 +1,11 @@
 package de.jakob.lotm.abilities.abyss;
 
 import de.jakob.lotm.abilities.core.SelectableAbility;
+import de.jakob.lotm.abilities.core.interaction.InteractionHandler;
 import de.jakob.lotm.attachments.ModAttachments;
 import de.jakob.lotm.effect.ModEffects;
 import de.jakob.lotm.util.BeyonderData;
+import de.jakob.lotm.util.data.Location;
 import de.jakob.lotm.util.helper.AbilityUtil;
 import de.jakob.lotm.util.helper.ParticleUtil;
 import de.jakob.lotm.util.scheduling.ServerScheduler;
@@ -76,6 +78,11 @@ public class DesireControlAbility extends SelectableAbility {
         ParticleUtil.spawnSphereParticles(level, desireDust, target.position().add(0, target.getEyeHeight() / 2, 0), 8, 150);
         level.playSound(null, target.blockPosition(), SoundEvents.BEACON_ACTIVATE, entity.getSoundSource(), 1.2f, 1.5f);
 
+        // Cancel when calming effect is active
+        if (InteractionHandler.isInteractionPossible(new Location(target.position(), level), "calming", BeyonderData.getSequence(entity))) {
+            return;
+        }
+
         int duration = calculateDuration(target);
         int amplifier = calculateAmplifier(entity, target);
 
@@ -105,6 +112,11 @@ public class DesireControlAbility extends SelectableAbility {
         ParticleUtil.spawnSphereParticles(level, desireDust, entity.position().add(0, 1, 0), 12, 200);
         ParticleUtil.spawnSphereParticles(level, ParticleTypes.EFFECT, entity.position().add(0, 1, 0), 10, 100);
         level.playSound(null, entity.blockPosition(), SoundEvents.WITHER_AMBIENT, entity.getSoundSource(), 2.0f, 1.2f);
+
+        // Cancel when calming effect is active
+        if (InteractionHandler.isInteractionPossible(new Location(entity.position(), level), "calming", BeyonderData.getSequence(entity))) {
+            return;
+        }
 
         AbilityUtil.getNearbyEntities(entity, level, entity.position(), aoeRadius)
                 .stream()

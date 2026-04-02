@@ -1,6 +1,7 @@
 package de.jakob.lotm.abilities.abyss;
 
 import de.jakob.lotm.abilities.core.Ability;
+import de.jakob.lotm.abilities.core.AbilityUsedEvent;
 import de.jakob.lotm.abilities.core.interaction.InteractionHandler;
 import de.jakob.lotm.damage.ModDamageTypes;
 import de.jakob.lotm.particle.ModParticles;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.NeoForge;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
@@ -29,7 +31,7 @@ import java.util.Map;
 
 public class PoisonousFlameAbility extends Ability {
     public PoisonousFlameAbility(String id) {
-        super(id, .8f);
+        super(id, .8f, "burning", "poison");
 
         hasOptimalDistance = true;
         optimalDistance = 1.75f;
@@ -58,6 +60,13 @@ public class PoisonousFlameAbility extends Ability {
 
         Vec3 startPos = entity.getEyePosition().subtract(0, .2, 0).add(entity.getLookAngle().normalize());
         level.playSound(null, startPos.x, startPos.y, startPos.z, SoundEvents.BLAZE_SHOOT, entity.getSoundSource(), 2.0f, .5f);
+
+        if (InteractionHandler.isInteractionPossible(new Location(startPos, level), "water", BeyonderData.getSequence(entity))) {
+            level.playSound(null, startPos.x, startPos.y, startPos.z, SoundEvents.FIRE_EXTINGUISH, entity.getSoundSource(), 2.0f, .5f);
+            ParticleUtil.spawnParticles((ServerLevel) level, ParticleTypes.LARGE_SMOKE, startPos, 10, .2, .1);
+            ParticleUtil.spawnParticles((ServerLevel) level, ParticleTypes.FALLING_WATER, startPos, 50, .2, .1);
+            return;
+        }
 
         ParticleUtil.drawParticleLine(
                 (ServerLevel) level,
@@ -117,5 +126,6 @@ public class PoisonousFlameAbility extends Ability {
         }
 
         ServerScheduler.scheduleDelayed(25, () -> level.setBlockAndUpdate(BlockPos.containing(startPos), Blocks.AIR.defaultBlockState()));
+        NeoForge.EVENT_BUS.post(new AbilityUsedEvent((ServerLevel) level, startPos, entity, this, interactionFlags, 2.4f, interactionCacheTicks));
     }
 }

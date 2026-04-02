@@ -122,7 +122,7 @@ public class PlayerTeleportationAbility extends SelectableAbility {
             PacketHandler.sendToAllPlayers(new SyncPlayerTeleportationPlayerNamesPacket(player.getUUID().toString(), player.getName().getString()));
         }
 
-        if(onlinePlayers.isEmpty()) {
+        if(onlinePlayers == null || onlinePlayers.isEmpty() || onlinePlayers.contains(null)) {
             return;
         }
         List<UUID> snapshot = List.copyOf(onlinePlayers);

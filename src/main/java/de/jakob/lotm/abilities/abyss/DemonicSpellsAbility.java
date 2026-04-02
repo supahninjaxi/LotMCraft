@@ -1,11 +1,15 @@
 package de.jakob.lotm.abilities.abyss;
 
+import de.jakob.lotm.abilities.core.AbilityUsedEvent;
 import de.jakob.lotm.abilities.core.SelectableAbility;
+import de.jakob.lotm.abilities.core.interaction.InteractionHandler;
 import de.jakob.lotm.entity.ModEntities;
 import de.jakob.lotm.entity.custom.AvatarEntity;
 import de.jakob.lotm.rendering.effectRendering.EffectManager;
 import de.jakob.lotm.util.BeyonderData;
+import de.jakob.lotm.util.data.Location;
 import de.jakob.lotm.util.helper.AbilityUtil;
+import de.jakob.lotm.util.helper.AllyUtil;
 import de.jakob.lotm.util.helper.DamageLookup;
 import de.jakob.lotm.util.helper.ParticleUtil;
 import de.jakob.lotm.util.scheduling.ServerScheduler;
@@ -21,6 +25,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.NeoForge;
 import org.joml.Vector3f;
 
 import java.util.*;
@@ -32,6 +37,7 @@ public class DemonicSpellsAbility extends SelectableAbility {
 
     public DemonicSpellsAbility(String id) {
         super(id, 3f);
+        postsUsedAbilityEventManually = true;
     }
 
     @Override
@@ -77,18 +83,25 @@ public class DemonicSpellsAbility extends SelectableAbility {
         double swampRadius = 15;
         double damage = DamageLookup.lookupDamage(4, 0.7) * multiplier(entity);
 
-        AbilityUtil.damageNearbyEntities(level, entity, swampRadius, damage, swampCenter, true, false);
+        ServerScheduler.scheduleForDuration(0, 20, 20 * 8, () -> {
+            if(InteractionHandler.isInteractionPossible(new Location(swampCenter, level), "purification", BeyonderData.getSequence(entity))) {
+                return;
+            }
 
-        AbilityUtil.getNearbyEntities(entity, level, swampCenter, swampRadius)
-                .stream()
-                .filter(target -> AbilityUtil.mayDamage(entity, target))
-                .forEach(target -> {
-                    target.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 6, 2, false, false));
-                    target.addEffect(new MobEffectInstance(MobEffects.WITHER, 20 * 4, 1, false, false));
-                    target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 4, 2, false, false));
-                });
+            AbilityUtil.damageNearbyEntities(level, entity, swampRadius, damage, swampCenter, true, false);
+
+            AbilityUtil.getNearbyEntities(entity, level, swampCenter, swampRadius)
+                    .stream()
+                    .filter(target -> AbilityUtil.mayDamage(entity, target) && !AllyUtil.isAlly(target, entity.getUUID()))
+                    .forEach(target -> {
+                        target.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 6, 2, false, false));
+                        target.addEffect(new MobEffectInstance(MobEffects.WITHER, 20 * 4, 1, false, false));
+                        target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 4, 2, false, false));
+                    });
+        }, null, level, () -> AbilityUtil.getTimeInArea(entity, new Location(swampCenter, level)));
 
         EffectManager.playEffect(EffectManager.Effect.ACID_SWAMP, swampCenter.x, swampCenter.y, swampCenter.z, level);
+        NeoForge.EVENT_BUS.post(new AbilityUsedEvent(level, swampCenter, entity, this, new String[]{"poison"}, swampRadius, 20 * 8));
     }
 
     private void castFilthyIllusion(ServerLevel level, LivingEntity entity) {
@@ -114,6 +127,12 @@ public class DemonicSpellsAbility extends SelectableAbility {
             }
         });
 
+        ServerScheduler.scheduleForDuration(0, 5, 20 * 8, () -> {
+            if(clone.isAlive() && InteractionHandler.isInteractionPossible(new Location(clone.position(), level), "light_strong", BeyonderData.getSequence(entity))) {
+                clone.discard();
+            }
+        });
+
         ServerScheduler.scheduleDelayed(20 * 5, () -> {
             if (clone.isAlive()) {
                 explodeClone(level, entity, clone.position());
@@ -131,7 +150,7 @@ public class DemonicSpellsAbility extends SelectableAbility {
         AbilityUtil.damageNearbyEntities(level, caster, 15, explosionDamage, explosionPos, true, false);
         AbilityUtil.getNearbyEntities(caster, level, explosionPos, 15)
                 .stream()
-                .filter(target -> AbilityUtil.mayDamage(caster, target))
+                .filter(target -> AbilityUtil.mayDamage(caster, target) && !AllyUtil.isAlly(target, caster.getUUID()))
                 .forEach(target -> {
                     Vec3 knockback = target.position().subtract(explosionPos).normalize().scale(1.5);
                     target.setDeltaMovement(target.getDeltaMovement().add(knockback));
@@ -158,19 +177,13 @@ public class DemonicSpellsAbility extends SelectableAbility {
             int bx = (int) Math.round(centerX + Math.cos(angle) * wallRadius);
             int bz = (int) Math.round(centerZ + Math.sin(angle) * wallRadius);
 
-            for (int height = 0; height < 30; height++) {
+            for (int height = 0; height < 18; height++) {
                 BlockPos pos = new BlockPos(bx,(int) Math.floor(centerY) + height, bz);
                 if (!level.getBlockState(pos).isSolid()) {
                     level.setBlock(pos, Blocks.BARRIER.defaultBlockState(), 3);
                     wallBlocks.add(pos);
                 }
             }
-        }
-
-        // Initial particle burst at wall block positions
-        for (BlockPos pos : wallBlocks) {
-            ParticleUtil.spawnParticles(level, redDust, pos.getCenter(), 1, 0.3, 0.05);
-            ParticleUtil.spawnParticles(level, ParticleTypes.FLAME, pos.getCenter(), 1, 0.2, 0.05);
         }
 
         ServerScheduler.scheduleForDuration(0, 5, 20 * 8, () -> {

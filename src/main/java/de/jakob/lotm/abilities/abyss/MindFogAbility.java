@@ -1,7 +1,10 @@
 package de.jakob.lotm.abilities.abyss;
 
 import de.jakob.lotm.abilities.core.ToggleAbility;
+import de.jakob.lotm.abilities.core.interaction.InteractionHandler;
 import de.jakob.lotm.attachments.ModAttachments;
+import de.jakob.lotm.util.BeyonderData;
+import de.jakob.lotm.util.data.Location;
 import de.jakob.lotm.util.helper.AbilityUtil;
 import de.jakob.lotm.util.helper.ParticleUtil;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -21,6 +24,7 @@ public class MindFogAbility extends ToggleAbility {
     private final Random random = new Random();
     private final DustParticleOptions fogDust = new DustParticleOptions(new Vector3f(0.75f, 0.82f, 0.95f), 1.2f);
     private final DustParticleOptions fogDustFaint = new DustParticleOptions(new Vector3f(0.88f, 0.9f, 1.0f), 0.8f);
+    private final DustParticleOptions fogDustStrong = new DustParticleOptions(new Vector3f(0.88f, 0.9f, 1.0f), 1.5f);
 
     public MindFogAbility(String id) {
         super(id);
@@ -60,6 +64,12 @@ public class MindFogAbility extends ToggleAbility {
             ParticleUtil.spawnParticles(serverLevel, particle, new Vec3(x, entity.getY() + 1, z), 1, 0.2, 0.02);
         }
 
+        if (InteractionHandler.isInteractionPossible(new Location(entity.position(), level), "purification", BeyonderData.getSequence(entity)) ||
+            InteractionHandler.isInteractionPossible(new Location(entity.position(), level), "calming", BeyonderData.getSequence(entity))) {
+            cancel(serverLevel, entity);
+            return;
+        }
+
         AbilityUtil.getNearbyEntities(entity, serverLevel, entity.position(), fogRadius)
                 .stream()
                 .filter(target -> AbilityUtil.mayDamage(entity, target))
@@ -72,6 +82,8 @@ public class MindFogAbility extends ToggleAbility {
                     if (random.nextInt(5) == 0) {
                         applyRandomNegativeEffect(target);
                     }
+
+                    ParticleUtil.spawnParticles(serverLevel, fogDustStrong, target.getEyePosition(), 5, 0.3, 0.1);
                 });
     }
 

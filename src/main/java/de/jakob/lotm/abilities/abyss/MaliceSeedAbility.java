@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@EventBusSubscriber(modid = LOTMCraft.MOD_ID)
+@EventBusSubscriber(modid = LOTMCraft.MOD_ID) // TODO: Rework, right now its pretty much only a loss of control and defiling seed is better
 public class MaliceSeedAbility extends Ability {
 
     // target UUID -> growth level (0-10)
@@ -81,11 +81,10 @@ public class MaliceSeedAbility extends Ability {
         seedGrowth.put(target.getUUID(), 0);
         casterTarget.put(entity.getUUID(), target.getUUID());
 
-        ParticleUtil.spawnParticles(serverLevel, maliceDust, target.getEyePosition(), 40, 1.5, 0);
+        ParticleUtil.spawnParticles(serverLevel, maliceDust, target.getEyePosition(), 40, .75, 0);
         level.playSound(null, BlockPos.containing(entity.position()), SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 1, 1);
 
-        // Apply Loosing Control as a visible negative-effect indicator (no particles, shows icon)
-        target.addEffect(new MobEffectInstance(ModEffects.LOOSING_CONTROL, Integer.MAX_VALUE, 0, false, false, true));
+        target.addEffect(new MobEffectInstance(ModEffects.LOOSING_CONTROL, 20 * 60 * 5, 0, false, false, true));
 
         AtomicInteger growth = new AtomicInteger(0);
 
@@ -98,7 +97,6 @@ public class MaliceSeedAbility extends Ability {
             // Pulse intensity increases with growth stage
             ParticleUtil.spawnParticles(serverLevel, maliceDust, target.getEyePosition(), 5 + newGrowth * 3, 1.0 + newGrowth * 0.1, 0);
         }, serverLevel);
-        // Seed persists at max growth until purged — no completion removal
     }
 
     /** Called by other systems (e.g. cleanse abilities) to purge the seed from a target. */

@@ -1,7 +1,8 @@
 package de.jakob.lotm.abilities.abyss;
 
+import de.jakob.lotm.abilities.core.AbilityUsedEvent;
 import de.jakob.lotm.abilities.core.SelectableAbility;
-import de.jakob.lotm.entity.custom.MeteorEntity;
+import de.jakob.lotm.entity.custom.ability_entities.MeteorEntity;
 import de.jakob.lotm.rendering.effectRendering.EffectManager;
 import de.jakob.lotm.util.BeyonderData;
 import de.jakob.lotm.util.helper.AbilityUtil;
@@ -16,6 +17,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +68,7 @@ public class FlamesOfTheAbyssAbility extends SelectableAbility {
                 SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 3f, 0.6f);
 
         // Stagger 5 meteors every 15 ticks
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 8; i++) {
             final int idx = i;
             ServerScheduler.scheduleDelayed(i * 15, () -> {
                 // Slight random scatter around the target
@@ -76,14 +78,16 @@ public class FlamesOfTheAbyssAbility extends SelectableAbility {
 
                 MeteorEntity meteor = new MeteorEntity(serverLevel,
                         1.6f, damage, 2.5f,
-                        entity, griefing, 8f, 10f);
+                        entity, griefing, 16f, 10f);
                 meteor.setColor(0.05f, 1.0f, 0.05f);
                 meteor.setCustomColor(true);
-                meteor.setAbyssImpact(true);
+                meteor.setAbyssImpact(false);
                 meteor.setPosition(landPos);
                 serverLevel.addFreshEntity(meteor);
             }, serverLevel);
         }
+
+        NeoForge.EVENT_BUS.post(new AbilityUsedEvent((ServerLevel) level, targetPos, entity, this, new String[]{"explosion", "burning"}, 12, 20 * 10));
     }
 
     // ── Spell 2: Pillars of the Abyss ────────────────────────────────────────
@@ -97,7 +101,7 @@ public class FlamesOfTheAbyssAbility extends SelectableAbility {
 
         // Apply heavy debuffs to all nearby entities
         float damage = (float) (DamageLookup.lookupDamage(1, 0.6) * multiplier(entity));
-        AbilityUtil.getNearbyEntities(entity, serverLevel, entity.position(), 15).forEach(e -> {
+        AbilityUtil.getNearbyEntities(entity, serverLevel, entity.position(), 18).forEach(e -> {
             e.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * 20, 4));          // Poison V
             e.addEffect(new MobEffectInstance(MobEffects.WITHER, 20 * 6, 1));           // Wither II
             e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 10, 3)); // Slowness IV
@@ -106,7 +110,7 @@ public class FlamesOfTheAbyssAbility extends SelectableAbility {
         });
 
         // First wave — 8 pillars in a ring around the caster
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 12; i++) {
             double angle = (i / 8.0) * Math.PI * 2;
             double dist = 3 + random.nextDouble() * 7;
             double px = entity.getX() + Math.cos(angle) * dist;
@@ -116,13 +120,15 @@ public class FlamesOfTheAbyssAbility extends SelectableAbility {
 
         // Second wave — 5 random pillars, staggered
         ServerScheduler.scheduleDelayed(12, () -> {
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 20; i++) {
                 double angle = random.nextDouble() * Math.PI * 2;
-                double dist = random.nextDouble() * 13;
+                double dist = random.nextDouble() * 16;
                 double px = entity.getX() + Math.cos(angle) * dist;
                 double pz = entity.getZ() + Math.sin(angle) * dist;
                 EffectManager.playEffect(EffectManager.Effect.ABYSS_PILLAR, px, entity.getY(), pz, serverLevel);
             }
         }, serverLevel);
+
+        NeoForge.EVENT_BUS.post(new AbilityUsedEvent((ServerLevel) level, entity.position(), entity, this, new String[]{"corruption", "burning"}, 7, 20 * 3));
     }
 }
