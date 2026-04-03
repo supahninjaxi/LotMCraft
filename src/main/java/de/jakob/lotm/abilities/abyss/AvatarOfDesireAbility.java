@@ -25,6 +25,10 @@ import java.util.Random;
 public class AvatarOfDesireAbility extends ToggleAbility {
     public AvatarOfDesireAbility(String id) {
         super(id, "corruption");
+
+        this.canBeReplicated = false;
+        this.canBeCopied = false;
+        this.canBeUsedInArtifact = false;
     }
 
     @Override
@@ -83,17 +87,16 @@ public class AvatarOfDesireAbility extends ToggleAbility {
 
         AbilityUtil.getNearbyEntities(entity, (ServerLevel) level, entity.position(), 3.75, false).forEach(e -> {
             if(AbilityUtil.isTargetSignificantlyWeaker(entity, e)) {
-                e.addEffect(new MobEffectInstance(ModEffects.LOOSING_CONTROL, 20 * 5, 7));
+                e.addEffect(new MobEffectInstance(ModEffects.LOOSING_CONTROL, 20 * 10, 5));
                 return;
             }
             else if(AbilityUtil.isTargetSignificantlyStronger(entity, e)) {
-                entity.addEffect(new MobEffectInstance(ModEffects.LOOSING_CONTROL, 20 * 5, 3));
-                entity.hurt(ModDamageTypes.source(level, ModDamageTypes.LOOSING_CONTROL, entity), 10);
+                entity.addEffect(new MobEffectInstance(ModEffects.LOOSING_CONTROL, 20 * 2, 1));
                 cancel((ServerLevel) level, entity);
                 return;
             }
 
-            e.addEffect(new MobEffectInstance(ModEffects.LOOSING_CONTROL, 20 * 5, random.nextInt(2, 5)));
+            e.addEffect(new MobEffectInstance(ModEffects.LOOSING_CONTROL, 20 * 5, random.nextInt(2, 3)));
         });
     }
 

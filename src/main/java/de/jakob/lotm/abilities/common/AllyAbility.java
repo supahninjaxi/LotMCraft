@@ -31,6 +31,9 @@ public class AllyAbility extends Ability {
         canBeUsedByNPC = false;
         canAlwaysBeUsed = true;
         doesNotIncreaseDigestion = true;
+        cannotBeStolen = true;
+        canBeReplicated = false;
+        canBeUsedInArtifact = false;
     }
 
     @Override

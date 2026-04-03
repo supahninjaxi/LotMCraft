@@ -1,14 +1,7 @@
 package de.jakob.lotm.abilities.error;
 
-import de.jakob.lotm.LOTMCraft;
-import de.jakob.lotm.abilities.core.Ability;
 import de.jakob.lotm.abilities.core.SelectableAbility;
-import de.jakob.lotm.abilities.error.handler.AbilityTheftHandler;
-import de.jakob.lotm.attachments.CopiedAbilityComponent;
-import de.jakob.lotm.attachments.DisabledAbilitiesComponent;
-import de.jakob.lotm.attachments.ModAttachments;
-import de.jakob.lotm.rendering.effectRendering.EffectManager;
-import de.jakob.lotm.util.BeyonderData;
+import de.jakob.lotm.abilities.error.handler.TheftHandler;
 import de.jakob.lotm.util.helper.AbilityUtil;
 import de.jakob.lotm.util.helper.CopiedAbilityHelper;
 import net.minecraft.network.chat.Component;
@@ -19,14 +12,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 public class AbilityTheftAbility extends SelectableAbility {
     public AbilityTheftAbility(String id) {
-        super(id, 1);
+        super(id, 1.5f);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override
@@ -75,7 +68,7 @@ public class AbilityTheftAbility extends SelectableAbility {
             return;
         }
 
-        AbilityTheftHandler.performTheft(level, entity, target, random, true);
+        TheftHandler.performAbilityTheft(level, entity, target, random, true);
     }
 
 }

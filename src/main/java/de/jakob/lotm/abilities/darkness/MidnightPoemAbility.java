@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
@@ -84,6 +85,11 @@ public class MidnightPoemAbility extends SelectableAbility {
         targets.forEach(target -> {
             int actualDuration = AbilityUtil.isTargetSignificantlyStronger(entity, target) ? 35 : AbilityUtil.isTargetSignificantlyWeaker(entity, target) ? 20 * 25 : duration;
             target.addEffect(new MobEffectInstance(ModEffects.ASLEEP, actualDuration, 1, false, false, true));
+
+            ServerScheduler.scheduleForDuration(0, 3, actualDuration, () -> {
+                target.setDeltaMovement(new Vec3(0, 0, 0));
+                target.hurtMarked = true;
+            });
         });
 
         ParticleUtil.spawnParticles((ServerLevel) level, dustBig, entity.getEyePosition().subtract(0, .4, 0), 800, 7, 0);

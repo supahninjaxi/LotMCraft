@@ -19,6 +19,8 @@ import java.util.Map;
 public class ConqueringAbility extends Ability {
     public ConqueringAbility(String id) {
         super(id, 1.5f);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

@@ -31,6 +31,8 @@ public class InvisibilityAbility extends Ability {
 
     public InvisibilityAbility(String id) {
         super(id, 180);
+        this.canBeCopied = false;
+        this.canBeReplicated = false;
     }
 
     @Override

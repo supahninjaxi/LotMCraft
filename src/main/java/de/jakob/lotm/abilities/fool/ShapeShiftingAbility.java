@@ -19,6 +19,7 @@ public class ShapeShiftingAbility extends SelectableAbility {
         super(id, 5);
         canBeCopied = false;
         canBeUsedByNPC = false;
+        canBeReplicated = false;
     }
 
     @Override

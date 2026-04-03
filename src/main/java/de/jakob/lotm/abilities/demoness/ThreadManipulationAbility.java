@@ -241,7 +241,6 @@ public class ThreadManipulationAbility extends SelectableAbility {
         }, null, level, () -> AbilityUtil.getTimeInArea(entity, new Location(entity.position(), level)));
         taskIdRef.set(taskId);
 
-
         ServerScheduler.scheduleDelayed(duration, () -> boundEntities.remove(targetEntity.getUUID()));
     }
 

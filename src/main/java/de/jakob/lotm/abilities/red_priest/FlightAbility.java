@@ -14,6 +14,8 @@ import java.util.Map;
 public class FlightAbility extends ToggleAbility {
     public FlightAbility(String id) {
         super(id);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

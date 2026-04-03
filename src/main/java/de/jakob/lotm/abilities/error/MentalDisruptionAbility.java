@@ -1,10 +1,13 @@
 package de.jakob.lotm.abilities.error;
 
 import de.jakob.lotm.abilities.core.Ability;
+import de.jakob.lotm.abilities.error.handler.TheftHandler;
 import de.jakob.lotm.damage.ModDamageTypes;
+import de.jakob.lotm.util.BeyonderData;
 import de.jakob.lotm.util.helper.AbilityUtil;
 import de.jakob.lotm.util.helper.DamageLookup;
 import de.jakob.lotm.util.helper.ParticleUtil;
+import de.jakob.lotm.util.scheduling.ServerScheduler;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -13,10 +16,12 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MentalDisruptionAbility extends Ability {
     public MentalDisruptionAbility(String id) {
@@ -56,5 +61,10 @@ public class MentalDisruptionAbility extends Ability {
 
         ParticleUtil.spawnParticles(serverLevel, ParticleTypes.END_ROD, target.getEyePosition(), 60, .5, .025);
         ParticleUtil.spawnParticles(serverLevel, dust, target.getEyePosition(), 120, .5, .025);
+
+        ServerScheduler.scheduleForDuration(0, 2, 20 * 4, () -> {
+            target.setDeltaMovement(new Vec3(0, 0, 0));
+            target.hurtMarked = true;
+        });
     }
 }

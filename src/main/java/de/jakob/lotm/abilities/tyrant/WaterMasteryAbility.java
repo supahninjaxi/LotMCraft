@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class WaterMasteryAbility extends SelectableAbility {
     public WaterMasteryAbility(String id) {
         super(id, 5f);
+        canBeCopied = false;
     }
 
     private final DustParticleOptions dust = new DustParticleOptions(

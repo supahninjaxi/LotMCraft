@@ -38,6 +38,7 @@ public class SpaceConcealmentAbility extends SelectableAbility {
 
     public SpaceConcealmentAbility(String id) {
         super(id, 1);
+        canBeCopied = false;
     }
 
     @Override

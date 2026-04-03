@@ -19,6 +19,9 @@ import java.util.Map;
 public class ConceptualizationAbility extends ToggleAbility {
     public ConceptualizationAbility(String id) {
         super(id);
+        canBeCopied = false;
+        canBeReplicated = false;
+        canBeUsedInArtifact = false;
     }
 
     @Override

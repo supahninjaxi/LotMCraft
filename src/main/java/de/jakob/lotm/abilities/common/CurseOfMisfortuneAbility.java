@@ -23,8 +23,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class CurseOfMisfortuneAbility extends Ability {
     public CurseOfMisfortuneAbility(String id) {
-        super(id, 10, "unluck");
+        super(id, 12, "unluck");
         postsUsedAbilityEventManually = true;
+        this.canBeCopied = false;
     }
 
     @Override
@@ -76,5 +77,5 @@ public class CurseOfMisfortuneAbility extends Ability {
         }
         target.addEffect(new MobEffectInstance(ModEffects.UNLUCK, 20 * 60 * 17, amplifier));
         NeoForge.EVENT_BUS.post(new AbilityUsedEvent(serverLevel, target.position(), entity, target, this, interactionFlags, interactionRadius, interactionCacheTicks));
-    }
+        }
 }

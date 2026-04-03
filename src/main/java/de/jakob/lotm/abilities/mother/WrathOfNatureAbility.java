@@ -23,6 +23,7 @@ import java.util.*;
 public class WrathOfNatureAbility extends SelectableAbility {
     public WrathOfNatureAbility(String id) {
         super(id, 3);
+        canBeCopied = false;
     }
 
     @Override

@@ -3,6 +3,7 @@ package de.jakob.lotm.abilities.error;
 import de.jakob.lotm.abilities.core.SelectableAbility;
 import de.jakob.lotm.entity.ModEntities;
 import de.jakob.lotm.entity.custom.ability_entities.TimeChangeEntity;
+import de.jakob.lotm.util.BeyonderData;
 import de.jakob.lotm.util.helper.ParticleUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -17,6 +18,8 @@ import java.util.Map;
 public class TimeManipulationAbility extends SelectableAbility {
     public TimeManipulationAbility(String id) {
         super(id, 17);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override
@@ -44,8 +47,10 @@ public class TimeManipulationAbility extends SelectableAbility {
         ParticleUtil.spawnParticles((ServerLevel) level, ParticleTypes.ENCHANT, entity.getEyePosition(), 400, 10, 2, 10, 0.05);
         ParticleUtil.spawnParticles((ServerLevel) level, ParticleTypes.END_ROD, entity.getEyePosition(), 100, 10, 2, 10, 0.05);
 
+        int multiplier = (int) BeyonderData.getMultiplier(entity);
+
         float timeMultiplier = selectedAbility == 0 ? 0.001f : (selectedAbility == 1 ? 4f : 0.2f);
-        TimeChangeEntity timeChangeEntity = new TimeChangeEntity(ModEntities.TIME_CHANGE.get(), level, 20 * 15, entity.getUUID(), 50, timeMultiplier);
+        TimeChangeEntity timeChangeEntity = new TimeChangeEntity(ModEntities.TIME_CHANGE.get(), level, 20 * 15, entity.getUUID(), 50 * multiplier, timeMultiplier);
         timeChangeEntity.setPos(entity.getX(), entity.getY(), entity.getZ());
         level.addFreshEntity(timeChangeEntity);
     }

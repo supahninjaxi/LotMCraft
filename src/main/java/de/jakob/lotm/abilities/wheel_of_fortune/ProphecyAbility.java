@@ -1,6 +1,7 @@
 package de.jakob.lotm.abilities.wheel_of_fortune;
 
 import de.jakob.lotm.abilities.core.Ability;
+import de.jakob.lotm.abilities.core.SelectableAbility;
 import de.jakob.lotm.effect.ModEffects;
 import de.jakob.lotm.entity.ModEntities;
 import de.jakob.lotm.entity.custom.ability_entities.tyrant_pathway.GiantLightningEntity;
@@ -31,9 +32,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class ProphecyAbility extends Ability {
+public class ProphecyAbility extends SelectableAbility {
     public ProphecyAbility(String id) {
         super(id, 4);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override
@@ -46,21 +49,23 @@ public class ProphecyAbility extends Ability {
         return 1000;
     }
 
-    private final String[] prophecies = new String[] {"disaster", "fortune", "misfortune_for_enemy"};
+    @Override
+    protected String[] getAbilityNames() {
+        return new String[]{
+                "ability.lotmcraft.prophecy.disaster",
+                "ability.lotmcraft.prophecy.fortune",
+                "ability.lotmcraft.prophecy.misfortune_for_enemy"
+        };
+    }
 
     @Override
-    public void onAbilityUse(Level level, LivingEntity entity) {
+    protected void castSelectedAbility(Level level, LivingEntity entity, int selectedAbility) {
         if(level.isClientSide()) return;
 
-        String prophecy = prophecies[level.random.nextInt(prophecies.length)];
-        if(entity instanceof Player player) {
-            player.displayClientMessage(Component.translatable("ability.lotmcraft.prophecy." + prophecy).withColor(0xc2edec), false);
-        }
-
-        switch(prophecy) {
-            case "disaster" -> manifestDisaster(level, entity);
-            case "fortune" -> manifestFortune(level, entity);
-            case "misfortune_for_enemy" -> manifestMisfortuneForEnemy(level, entity);
+        switch(selectedAbility) {
+            case 0 -> manifestDisaster(level, entity);
+            case 1 -> manifestFortune(level, entity);
+            case 2 -> manifestMisfortuneForEnemy(level, entity);
         }
     }
 
@@ -156,7 +161,7 @@ public class ProphecyAbility extends Ability {
 
     private void rainGoodItems(Level level, LivingEntity entity) {
         Vec3 startLoc = entity.position().add(0, 7, 0);
-        for(int i = 0; i < 100; i++) {
+        for(int i = 0; i < 50; i++) {
             ItemStack goodItem = getGoodItem();
             Vec3 spawnLoc = startLoc.add((random.nextDouble() - 0.5) * 12, 0, (random.nextDouble() - 0.5) * 12);
             BlockPos pos = BlockPos.containing(spawnLoc);
@@ -166,15 +171,15 @@ public class ProphecyAbility extends Ability {
 
     private ItemStack getGoodItem() {
         return switch (random.nextInt(10)) {
-            case 0 -> new ItemStack(Items.EMERALD, random.nextInt(1, 20));
-            case 1, 2 -> new ItemStack(Items.DIAMOND, random.nextInt(1, 20));
-            case 3 -> new ItemStack(Items.GOLD_INGOT, random.nextInt(1, 64));
-            case 4 -> new ItemStack(Items.IRON_BLOCK, random.nextInt(1, 25));
-            case 5 -> new ItemStack(Items.SHULKER_SHELL, random.nextInt(1, 20));
-            case 6 -> new ItemStack(Items.GLOWSTONE, random.nextInt(1, 64));
-            case 7 -> new ItemStack(Items.GOLDEN_CARROT, random.nextInt(1, 64));
+            case 0 -> new ItemStack(Items.EMERALD, random.nextInt(1, 5));
+            case 1, 2 -> new ItemStack(Items.DIAMOND, random.nextInt(1, 5));
+            case 3 -> new ItemStack(Items.GOLD_INGOT, random.nextInt(1, 32));
+            case 4 -> new ItemStack(Items.IRON_BLOCK, random.nextInt(1, 10));
+            case 5 -> new ItemStack(Items.SHULKER_SHELL, random.nextInt(1, 5));
+            case 6 -> new ItemStack(Items.GLOWSTONE, random.nextInt(1, 32));
+            case 7 -> new ItemStack(Items.GOLDEN_CARROT, random.nextInt(1, 32));
             case 8 -> new ItemStack(Items.ANCIENT_DEBRIS, 1);
-            case 9 -> new ItemStack(Items.ENDER_PEARL, random.nextInt(1, 17));
+            case 9 -> new ItemStack(Items.ENDER_PEARL, random.nextInt(1, 8));
             default -> new ItemStack(Items.DIAMOND, 1);
         };
     }

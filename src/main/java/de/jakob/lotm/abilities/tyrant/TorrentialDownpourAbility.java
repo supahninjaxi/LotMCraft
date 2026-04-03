@@ -27,6 +27,7 @@ import java.util.*;
 public class TorrentialDownpourAbility extends Ability {
     public TorrentialDownpourAbility(String id) {
         super(id, 40);
+        canBeCopied = false;
     }
 
     @Override

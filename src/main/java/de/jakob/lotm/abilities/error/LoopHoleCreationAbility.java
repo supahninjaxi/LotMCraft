@@ -3,7 +3,7 @@ package de.jakob.lotm.abilities.error;
 import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.abilities.core.Ability;
 import de.jakob.lotm.abilities.core.AbilityUseEvent;
-import de.jakob.lotm.abilities.error.handler.AbilityTheftHandler;
+import de.jakob.lotm.abilities.error.handler.TheftHandler;
 import de.jakob.lotm.abilities.visionary.IdentityAvatarAbility;
 import de.jakob.lotm.data.ModDataComponents;
 import de.jakob.lotm.rendering.effectRendering.EffectManager;
@@ -39,6 +39,8 @@ public class LoopHoleCreationAbility extends Ability {
 
     public LoopHoleCreationAbility(String id) {
         super(id, 3.5f);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override
@@ -86,7 +88,7 @@ public class LoopHoleCreationAbility extends Ability {
                     e.teleportTo(targetLoc.x, targetLoc.y, targetLoc.z);
 
                     if(BeyonderData.isBeyonder(e))
-                        AbilityTheftHandler.performTheft(serverLevel, entity, e, random, false);
+                        TheftHandler.performAbilityTheft(serverLevel, entity, e, random, false);
                 }
             });
         });

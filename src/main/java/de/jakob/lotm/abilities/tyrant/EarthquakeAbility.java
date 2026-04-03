@@ -28,6 +28,7 @@ public class EarthquakeAbility extends Ability {
 
     public EarthquakeAbility(String id) {
         super(id, 32);
+        canBeCopied = false;
     }
 
     @Override

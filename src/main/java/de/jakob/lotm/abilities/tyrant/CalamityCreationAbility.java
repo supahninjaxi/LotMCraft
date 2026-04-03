@@ -38,6 +38,7 @@ public class CalamityCreationAbility extends SelectableAbility {
     public CalamityCreationAbility(String id) {
         super(id, 25);
         postsUsedAbilityEventManually = true;
+        canBeCopied = false;
     }
 
     @Override

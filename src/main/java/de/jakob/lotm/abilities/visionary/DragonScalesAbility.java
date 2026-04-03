@@ -16,6 +16,10 @@ import java.util.Map;
 public class DragonScalesAbility extends ToggleAbility {
     public DragonScalesAbility(String id) {
         super(id);
+        canBeCopied = false;
+        canBeReplicated =false;
+        canBeUsedInArtifact = false;
+        cannotBeStolen = true;
     }
 
     @Override

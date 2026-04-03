@@ -20,6 +20,8 @@ public class SpectatingAbility extends ToggleAbility {
         super(id);
 
         canBeUsedByNPC = false;
+        canBeReplicated = false;
+        canBeCopied = false;
     }
 
     @Override

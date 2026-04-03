@@ -23,6 +23,8 @@ public class PsychologicalInvisibilityAbility extends Ability {
 
     public PsychologicalInvisibilityAbility(String id) {
         super(id, 180);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

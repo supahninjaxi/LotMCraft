@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class PsycheStormAbility extends Ability {
     public PsycheStormAbility(String id) {
-        super(id, 4);
+        super(id, 7);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class PsycheStormAbility extends Ability {
             return;
         }
 
-        AbilityUtil.damageNearbyEntities(serverLevel, entity, 10, DamageLookup.lookupDamage(6, .875) * multiplier(entity), entity.getEyePosition(), true, false);
+        AbilityUtil.damageNearbyEntities(serverLevel, entity, 10, DamageLookup.lookupDamage(6, 1.2), entity.getEyePosition(), true, false);
         AbilityUtil.getNearbyEntities(entity, serverLevel, entity.getEyePosition(), 10).forEach(e -> e.addEffect(new MobEffectInstance(ModEffects.LOOSING_CONTROL, 20 * 7, getAmplifier(entity, e))));
 
         Location loc = new Location(entity.position(), serverLevel);

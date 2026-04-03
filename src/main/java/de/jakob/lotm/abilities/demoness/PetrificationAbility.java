@@ -1,6 +1,7 @@
 package de.jakob.lotm.abilities.demoness;
 
 import com.google.common.util.concurrent.AtomicDouble;
+import de.jakob.lotm.LOTMCraft;
 import de.jakob.lotm.abilities.core.SelectableAbility;
 import de.jakob.lotm.effect.ModEffects;
 import de.jakob.lotm.network.PacketHandler;
@@ -19,13 +20,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@EventBusSubscriber(modid = LOTMCraft.MOD_ID)
 public class PetrificationAbility extends SelectableAbility {
     public PetrificationAbility(String id) {
-        super(id, 5);
+        super(id, 60);
+        canBeCopied = false;
     }
 
     @Override
@@ -125,4 +132,29 @@ public class PetrificationAbility extends SelectableAbility {
         }, null, serverLevel, () -> AbilityUtil.getTimeInArea(entity, new Location(entity.position(), serverLevel)));
     }
 
+    @SubscribeEvent
+    public static void onLivingDamage(LivingIncomingDamageEvent event) {
+        if(!(event.getEntity().level() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+
+        LivingEntity entity = event.getEntity();
+
+        if(entity.hasEffect(ModEffects.PETRIFICATION)){
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
+        if(!(event.getEntity().level() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+
+        LivingEntity entity = event.getEntity();
+
+        if(entity.hasEffect(ModEffects.PETRIFICATION)){
+            event.setCanceled(true);
+        }
+    }
 }

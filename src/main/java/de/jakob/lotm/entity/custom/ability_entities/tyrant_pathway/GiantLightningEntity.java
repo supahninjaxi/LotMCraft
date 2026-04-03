@@ -321,7 +321,7 @@ public class GiantLightningEntity extends Entity {
             dealWaterWallDamage(pos);
 
             ServerScheduler.scheduleDelayed(15, this::discardEntityAndBranches);
-        } else {
+        } else if(level().isClientSide) {
             ClientHandler.applyCameraShakeToPlayersInRadius(4f, 35, (ClientLevel) level(), pos, 60);
         }
     }

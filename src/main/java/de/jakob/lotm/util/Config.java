@@ -3,12 +3,15 @@ package de.jakob.lotm.util;
 import de.jakob.lotm.LOTMCraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.biome.Biome;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,12 +40,18 @@ public class Config
             .comment("A list of items to log on common setup.")
             .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), Config::validateItemName);
 
+    private static final ModConfigSpec.ConfigValue<List<? extends String>> BANNED_BIOMES = BUILDER
+            .comment("A list of biomes to ban npc spawn.")
+            .defineListAllowEmpty("banned_biomes", List.of("minecraft:mushroom_fields", "minecraft:deep_dark"),
+                    obj -> obj instanceof String && ((String) obj).contains(":"));
+
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     public static boolean logDirtBlock;
     public static int magicNumber;
     public static String magicNumberIntroduction;
     public static Set<Item> items;
+    public static Set<ResourceLocation> biomes;
 
     private static boolean validateItemName(final Object obj)
     {
@@ -55,6 +64,9 @@ public class Config
         logDirtBlock = LOG_DIRT_BLOCK.get();
         magicNumber = MAGIC_NUMBER.get();
         magicNumberIntroduction = MAGIC_NUMBER_INTRODUCTION.get();
+        biomes = Config.BANNED_BIOMES.get().stream()
+                .map(ResourceLocation::parse)
+                .collect(Collectors.toSet());
 
         // convert the list of strings into a set of items
         items = ITEM_STRINGS.get().stream()

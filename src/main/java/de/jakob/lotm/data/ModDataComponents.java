@@ -72,6 +72,30 @@ public class ModDataComponents {
                             .persistent(Codec.STRING)
                             .build());
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> SEALED_ARTIFACT_GENERATED =
+            DATA_COMPONENT_TYPES.register("sealed_artifact_generated",
+                    () -> DataComponentType.<Boolean>builder()
+                            .persistent(Codec.BOOL)
+                            .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> SEALED_ARTIFACT_GENERATED_SEQ =
+            DATA_COMPONENT_TYPES.register("sealed_artifact_generated_seq",
+                    () -> DataComponentType.<Integer>builder()
+                            .persistent(Codec.INT)
+                            .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> SEALED_ARTIFACT_GENERATED_PATH =
+            DATA_COMPONENT_TYPES.register("sealed_artifact_generated_path",
+                    () -> DataComponentType.<String>builder()
+                            .persistent(Codec.STRING)
+                            .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> SEALED_ARTIFACT_GENERATED_FAILED =
+            DATA_COMPONENT_TYPES.register("sealed_artifact_generated_failed",
+                    () -> DataComponentType.<Boolean>builder()
+                            .persistent(Codec.BOOL)
+                            .build());
+
     // Data component for storing the center position of excavation
     public static final Supplier<DataComponentType<String>> EXCAVATION_CENTER =
             DATA_COMPONENT_TYPES.register("excavation_center",

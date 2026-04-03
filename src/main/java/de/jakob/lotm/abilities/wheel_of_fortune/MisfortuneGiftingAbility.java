@@ -20,6 +20,7 @@ import java.util.Map;
 public class MisfortuneGiftingAbility extends Ability {
     public MisfortuneGiftingAbility(String id) {
         super(id, 2);
+        canBeCopied = false;
     }
 
     @Override

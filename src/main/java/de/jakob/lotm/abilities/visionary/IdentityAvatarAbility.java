@@ -16,6 +16,9 @@ import java.util.Map;
 public class IdentityAvatarAbility extends Ability {
     public IdentityAvatarAbility(String id) {
         super(id, 5);
+        canBeCopied = false;
+        canBeReplicated = false;
+        canBeUsedInArtifact = false;
     }
 
     @Override

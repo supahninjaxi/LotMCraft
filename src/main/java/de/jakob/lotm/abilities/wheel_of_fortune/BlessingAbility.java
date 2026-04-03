@@ -27,6 +27,7 @@ public class BlessingAbility extends Ability {
         canBeUsedByNPC = false;
         postsUsedAbilityEventManually = true;
         interactionRadius = 2;
+        canBeCopied = false;
     }
 
     @Override

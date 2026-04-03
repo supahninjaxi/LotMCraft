@@ -29,6 +29,7 @@ import java.util.Map;
 public class SealingAbility extends Ability {
     public SealingAbility(String id) {
         super(id, 2);
+        canBeCopied = false;
     }
 
     @Override

@@ -735,10 +735,10 @@ public class NegativeEffect {
         Collections.shuffle(pathwayEffects, random);
         Collections.shuffle(defaultEffects, random);
 
-        int totalEffects = (sequence <= 1) ? 5 :
-                    (sequence <= 2) ? 4 :
-                    (sequence <= 4) ? 3 :
-                    (sequence <= 7) ? 2 : 1;
+        int totalEffects = (sequence <= 1) ? 7 :
+                    (sequence <= 2) ? 6 :
+                    (sequence <= 4) ? 5 :
+                    (sequence <= 7) ? 4 : 3;
 
         if (baseItem.equals("star")) {
             totalEffects -= 2;

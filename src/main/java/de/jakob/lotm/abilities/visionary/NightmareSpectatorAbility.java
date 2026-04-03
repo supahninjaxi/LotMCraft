@@ -24,6 +24,7 @@ public class NightmareSpectatorAbility extends Ability {
 
     public NightmareSpectatorAbility(String id) {
         super(id, 1.5f);
+        canBeCopied = false;
     }
 
     @Override

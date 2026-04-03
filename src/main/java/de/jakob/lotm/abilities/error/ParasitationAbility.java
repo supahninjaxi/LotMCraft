@@ -9,6 +9,7 @@ import de.jakob.lotm.util.BeyonderData;
 import de.jakob.lotm.util.helper.AbilityUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -21,6 +22,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +37,9 @@ public class ParasitationAbility extends ToggleAbility {
         super(id);
 
         canBeUsedByNPC = false;
+        canBeCopied = false;
+        canBeReplicated = false;
+        canBeUsedInArtifact = false;
     }
 
     @Override
@@ -137,8 +142,6 @@ public class ParasitationAbility extends ToggleAbility {
         }
     }
 
-
-
     @Override
     public void stop(Level level, LivingEntity entity) {
         if(!(level instanceof ServerLevel serverLevel))
@@ -195,5 +198,26 @@ public class ParasitationAbility extends ToggleAbility {
         }
 
         event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void onLivingDamage(LivingIncomingDamageEvent event) {
+
+        var entity = event.getEntity();
+        if(!(entity.level() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+
+        if(hostMap.containsKey(entity.getUUID())){
+            var target = serverLevel.getEntity(hostMap.get(entity.getUUID()));
+            if(target == null) return;
+
+            float damage = event.getAmount();
+            DamageSource source = serverLevel.damageSources().generic();
+
+            target.hurt(source, damage);
+
+            event.setCanceled(true);
+        }
     }
 }

@@ -28,7 +28,7 @@ import java.util.Map;
 public class FlameSpellsAbility extends SelectableAbility {
 
     public FlameSpellsAbility(String id) {
-        super(id, .75f, "burning");
+        super(id, 1.75f, "burning");
     }
 
     @Override

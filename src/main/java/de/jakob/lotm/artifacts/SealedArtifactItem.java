@@ -3,14 +3,20 @@ package de.jakob.lotm.artifacts;
 import de.jakob.lotm.abilities.core.Ability;
 import de.jakob.lotm.abilities.core.SelectableAbility;
 import de.jakob.lotm.data.ModDataComponents;
+import de.jakob.lotm.gamerule.ModGameRules;
+import de.jakob.lotm.item.ModItems;
+import de.jakob.lotm.potions.BeyonderCharacteristicItem;
+import de.jakob.lotm.potions.BeyonderCharacteristicItemHandler;
 import de.jakob.lotm.util.BeyonderData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.item.Item;
@@ -20,6 +26,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 public class SealedArtifactItem extends Item {
 
@@ -33,6 +40,12 @@ public class SealedArtifactItem extends Item {
 
         if(level.isClientSide) {
             return InteractionResultHolder.success(stack);
+        }
+
+        if(!level.getGameRules().getBoolean(ModGameRules.ALLOW_ARTIFACTS)){
+            player.setItemInHand(hand, ItemStack.EMPTY);
+
+            return InteractionResultHolder.success(ItemStack.EMPTY);
         }
 
         SealedArtifactData data = stack.get(ModDataComponents.SEALED_ARTIFACT_DATA);
@@ -75,6 +88,37 @@ public class SealedArtifactItem extends Item {
         addAbilityList(tooltipComponents, data);
         addDivider(tooltipComponents);
         addNegativeEffects(tooltipComponents, data);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected){
+        if (level.isClientSide) return;
+
+        if (!(entity instanceof ServerPlayer player)) return;
+
+        boolean generated = stack.getOrDefault(ModDataComponents.SEALED_ARTIFACT_GENERATED, false);
+        boolean failed = stack.getOrDefault(ModDataComponents.SEALED_ARTIFACT_GENERATED_FAILED, false);
+        if (generated) return;
+
+        String baseType = stack.get(ModDataComponents.SEALED_ARTIFACT_BASE_TYPE);
+        Integer sequence = stack.get(ModDataComponents.SEALED_ARTIFACT_GENERATED_SEQ);
+        String path = stack.get(ModDataComponents.SEALED_ARTIFACT_GENERATED_PATH);
+
+        if(baseType == null || sequence == null || path == null) return;
+
+        if(!failed){
+            SealedArtifactData data = SealedArtifactHandler.createSealedArtifactData(path, sequence, baseType);
+
+            stack.set(ModDataComponents.SEALED_ARTIFACT_DATA, data);
+            stack.set(ModDataComponents.SEALED_ARTIFACT_GENERATED, true);
+        }
+        else{
+            ItemStack newStack = new ItemStack(Objects.requireNonNull(BeyonderCharacteristicItemHandler
+                    .selectCharacteristicOfPathwayAndSequence(path, sequence)));
+
+            player.getInventory().setItem(slot, newStack);
+        }
+
     }
 
 // ── Sections ────────────────────────────────────────────────

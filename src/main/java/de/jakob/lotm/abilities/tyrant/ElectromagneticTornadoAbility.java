@@ -15,6 +15,7 @@ import java.util.Map;
 public class ElectromagneticTornadoAbility extends Ability {
     public ElectromagneticTornadoAbility(String id) {
         super(id, 2.5f);
+        canBeCopied = false;
     }
 
     @Override

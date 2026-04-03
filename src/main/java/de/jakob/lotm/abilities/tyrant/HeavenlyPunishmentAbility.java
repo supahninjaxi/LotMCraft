@@ -18,6 +18,7 @@ import java.util.Map;
 public class HeavenlyPunishmentAbility extends Ability {
     public HeavenlyPunishmentAbility(String id) {
         super(id, 2);
+        canBeCopied = false;
     }
 
     @Override

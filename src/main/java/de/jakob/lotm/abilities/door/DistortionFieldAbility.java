@@ -25,6 +25,7 @@ import java.util.Map;
 public class DistortionFieldAbility extends Ability {
     public DistortionFieldAbility(String id) {
         super(id, 40);
+        canBeCopied = false;
     }
 
     @Override

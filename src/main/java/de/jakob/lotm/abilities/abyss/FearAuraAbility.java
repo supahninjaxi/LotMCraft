@@ -25,6 +25,7 @@ public class FearAuraAbility extends Ability {
 
     public FearAuraAbility(String id) {
         super(id, 30);
+        this.canBeCopied = false;
     }
 
     @Override

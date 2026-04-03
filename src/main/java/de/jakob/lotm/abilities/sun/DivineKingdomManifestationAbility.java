@@ -17,6 +17,7 @@ public class DivineKingdomManifestationAbility extends Ability {
 
         canBeCopied = false;
         canBeUsedByNPC = false;
+        canBeReplicated = false;
     }
 
     @Override

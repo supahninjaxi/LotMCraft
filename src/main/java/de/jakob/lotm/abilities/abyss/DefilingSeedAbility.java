@@ -71,7 +71,9 @@ public class DefilingSeedAbility extends Ability {
     );
 
     public DefilingSeedAbility(String id) {
-        super(id, 2);
+        super(id, 5);
+        this.canBeCopied = false;
+
     }
 
     @Override
@@ -124,9 +126,9 @@ public class DefilingSeedAbility extends Ability {
                     switch (random.nextInt(22)) {
                         case 0, 2, 3 -> target.hurt(
                                 ModDamageTypes.source(level, ModDamageTypes.LOOSING_CONTROL, entity),
-                                6 * damageMultiplier);
+                                2 * damageMultiplier);
                         case 1 -> target.addEffect(new MobEffectInstance(
-                                ModEffects.LOOSING_CONTROL, 20 * 4, random.nextInt(4)));
+                                ModEffects.LOOSING_CONTROL, 20 * 3, random.nextInt(3)));
                         case 4, 5 -> target.addEffect(new MobEffectInstance(
                                 MobEffects.MOVEMENT_SLOWDOWN, 20 * 9, random.nextInt(2, 7)));
                     }

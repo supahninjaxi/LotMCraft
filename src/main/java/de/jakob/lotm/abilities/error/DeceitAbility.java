@@ -33,6 +33,8 @@ public class DeceitAbility extends SelectableAbility {
 
     public DeceitAbility(String id) {
         super(id, 1);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override
@@ -110,9 +112,17 @@ public class DeceitAbility extends SelectableAbility {
     @SubscribeEvent
     public static void onIncomingDamage(LivingIncomingDamageEvent event) {
         LivingEntity entity = event.getEntity();
-        if(cannotBeHarmed.contains(entity.getUUID()) && entity.level() instanceof ServerLevel serverLevel) {
-            ParticleUtil.spawnParticles(serverLevel, ParticleTypes.END_ROD, entity.position().add(0, entity.getEyeHeight() / 2, 0), 60, 0.5, 0.5, 0.5, 0.1);
-            event.setCanceled(true);
+
+        var source = event.getSource().getEntity();
+
+        if(!cannotBeHarmed.contains(entity.getUUID()) || !(entity.level() instanceof ServerLevel serverLevel)) return;
+
+        if(!(source instanceof LivingEntity livingSource) ||
+                BeyonderData.getSequence(livingSource) < BeyonderData.getSequence(entity)){
+           return;
         }
+
+        ParticleUtil.spawnParticles(serverLevel, ParticleTypes.END_ROD, entity.position().add(0, entity.getEyeHeight() / 2, 0), 60, 0.5, 0.5, 0.5, 0.1);
+        event.setCanceled(true);
     }
 }

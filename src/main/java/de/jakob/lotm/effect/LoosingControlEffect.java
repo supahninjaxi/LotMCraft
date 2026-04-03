@@ -1,10 +1,14 @@
 package de.jakob.lotm.effect;
 
+import de.jakob.lotm.attachments.ModAttachments;
 import de.jakob.lotm.damage.ModDamageTypes;
+import net.minecraft.client.multiplayer.chat.report.ReportEnvironment;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
@@ -49,11 +53,23 @@ public class LoosingControlEffect extends MobEffect {
 
         if(random.nextInt(7) == 0 && livingEntity.getHealth() > effectiveAmplifier) {
             livingEntity.hurt(createCustomDamageSource(livingEntity), effectiveAmplifier);
+
+            if(livingEntity instanceof ServerPlayer player){
+                var sanity = player.getData(ModAttachments.SANITY_COMPONENT);
+
+                sanity.setSanityAndSync(Math.max(0.0f, sanity.getSanity() - (effectiveAmplifier/2000.0f)), player);
+            }
         }
 
         float totalProbability = getProbability(amplifier);
 
-        if (amplifier > 8 || shouldKillThisTick(totalProbability)) {
+        MobEffectInstance instance = livingEntity.getEffect(ModEffects.LOOSING_CONTROL);
+        int duration = 100;
+        if (instance != null) {
+            duration = instance.getDuration(); // in ticks
+        }
+
+        if (amplifier >= 10 || shouldKillThisTick(totalProbability, duration)) {
             livingEntity.removeEffect(ModEffects.LOOSING_CONTROL);
             livingEntity.hurt(
                     createCustomDamageSource(livingEntity),
@@ -64,12 +80,10 @@ public class LoosingControlEffect extends MobEffect {
         return true;
     }
 
-    private boolean shouldKillThisTick(float totalProbability) {
+    private boolean shouldKillThisTick(float totalProbability, int ticks) {
         if(totalProbability == 0f) {
             return false;
         }
-        // Effect is designed to last 5 seconds = 100 ticks
-        int ticks = 100;
 
         // Correct probability distribution:
         float perTickChance = 1f - (float) Math.pow(1f - totalProbability, 1f / ticks);

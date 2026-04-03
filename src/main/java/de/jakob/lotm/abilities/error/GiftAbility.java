@@ -27,6 +27,8 @@ import java.util.Random;
 public class GiftAbility extends Ability {
     public GiftAbility(String id) {
         super(id, 1);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

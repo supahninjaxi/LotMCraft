@@ -25,6 +25,7 @@ import java.util.Map;
 public class WallOfLightAbility extends Ability {
     public WallOfLightAbility(String id) {
         super(id, 5);
+        canBeCopied = false;
     }
 
     @Override

@@ -23,6 +23,8 @@ public class CullAbility extends ToggleAbility {
 
     public CullAbility(String id) {
         super(id);
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override

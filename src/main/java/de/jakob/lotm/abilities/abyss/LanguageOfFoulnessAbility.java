@@ -25,7 +25,9 @@ import java.util.Map;
 
 public class LanguageOfFoulnessAbility extends SelectableAbility {
     public LanguageOfFoulnessAbility(String id) {
-        super(id, 2);
+        super(id, 3);
+        this.canBeCopied = false;
+        this.canBeReplicated = false;
     }
 
     @Override
@@ -70,6 +72,10 @@ public class LanguageOfFoulnessAbility extends SelectableAbility {
     }
 
     private void castDeath(ServerLevel serverLevel, LivingEntity entity, LivingEntity target) {
+        if(AbilityUtil.isTargetSignificantlyStronger(entity, target)) {
+            return;
+        }
+
         ServerScheduler.scheduleForDuration(0, 1, 20 * 8, () -> {
             if(random.nextInt(8) == 0) {
                 target.hurt(ModDamageTypes.source(serverLevel, ModDamageTypes.BEYONDER_GENERIC, entity), (float) (DamageLookup.lookupDps(6, .8, 8, 20) * multiplier(entity)));
@@ -82,6 +88,7 @@ public class LanguageOfFoulnessAbility extends SelectableAbility {
         if(AbilityUtil.isTargetSignificantlyStronger(entity, target)) {
             return;
         }
+
         target.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 8, 1, false, false, false));
         target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 8, 1, false, false, false));
         target.addEffect(new MobEffectInstance(ModEffects.LOOSING_CONTROL, 20 * 8, random.nextInt(3), false, false, false));

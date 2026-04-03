@@ -27,6 +27,8 @@ public class MythicalCreatureFormAbility extends ToggleAbility {
 
         this.canBeCopied = false;
         this.cannotBeStolen = true;
+        this.canBeReplicated = false;
+        this.canBeUsedInArtifact = false;
     }
 
     @Override

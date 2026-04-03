@@ -29,6 +29,7 @@ public class FlaringSunAbility extends Ability {
         super(id, 8, "purification", "burning", "light_source", "light_strong", "light_weak");
         postsUsedAbilityEventManually = true;
         interactionRadius = 14;
+        canBeCopied = false;
     }
 
     @Override

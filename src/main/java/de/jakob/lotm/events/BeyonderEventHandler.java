@@ -215,9 +215,18 @@ public class BeyonderEventHandler {
                 }
 
                 else{
-                    SealedArtifactData data = stack.get(ModDataComponents.SEALED_ARTIFACT_DATA);
-                    if (data != null
-                            && !beyonderMap.check(data.pathway(), data.sequence())) {
+                    SealedArtifactData data = stack.get(ModDataComponents.SEALED_ARTIFACT_DATA.get());
+
+                    boolean valid = true, allowed = true, noNegativesAllowed = true;
+                    if(data != null) {
+                        valid = beyonderMap.check(data.pathway(), data.sequence());
+                        allowed = player.level().getGameRules().getBoolean(ModGameRules.ALLOW_ARTIFACTS);
+
+                        noNegativesAllowed = !player.level().getGameRules().getBoolean(ModGameRules.
+                                ALLOW_ARTIFACTS_WITH_NO_NEGATIVES) && data.negativeEffect().isEmpty();
+                    }
+
+                    if (data != null && (!valid || !allowed) && noNegativesAllowed) {
                         slot.set(ItemStack.EMPTY);
                     }
                 }

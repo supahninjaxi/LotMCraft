@@ -20,6 +20,9 @@ public class PlacateAbility extends SelectableAbility {
         super(id, 7, "morale_boost");
         interactionRadius = 18;
         interactionCacheTicks = 20 * 5;
+
+        canBeCopied = false;
+        canBeReplicated = false;
     }
 
     @Override
@@ -78,7 +81,7 @@ public class PlacateAbility extends SelectableAbility {
     }
 
     private void placateEntity(LivingEntity entity) {
-        entity.getData(ModAttachments.SANITY_COMPONENT).increaseSanityAndSync(.25f, entity);
+        entity.getData(ModAttachments.SANITY_COMPONENT).increaseSanityAndSync(.15f, entity);
         entity.removeEffect(ModEffects.LOOSING_CONTROL);
     }
 

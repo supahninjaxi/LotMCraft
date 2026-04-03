@@ -20,6 +20,7 @@ import java.util.Map;
 public class FogOfWarAbility extends ToggleAbility {
     public FogOfWarAbility(String id) {
         super(id);
+        canBeCopied = false;
     }
 
     @Override

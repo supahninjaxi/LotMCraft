@@ -30,7 +30,10 @@ public class PaperFigurineSubstituteAbility extends Ability {
     private static final HashMap<UUID, Integer> figurineNumbers = new HashMap<>();
 
     public PaperFigurineSubstituteAbility(String id) {
-        super(id, 5f);
+        super(id, 10f);
+        canBeCopied = false;
+        canBeReplicated = false;
+        canBeUsedInArtifact = false;
     }
 
     @Override

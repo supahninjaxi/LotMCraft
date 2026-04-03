@@ -22,6 +22,7 @@ import java.util.Map;
 public class SpaceTimeStormAbility extends Ability {
     public SpaceTimeStormAbility(String id) {
         super(id, 12);
+        canBeCopied = false;
     }
 
     @Override

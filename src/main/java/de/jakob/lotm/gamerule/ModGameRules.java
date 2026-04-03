@@ -13,6 +13,8 @@ public class ModGameRules {
     public static GameRules.Key<GameRules.BooleanValue> SPAWN_WITH_STARTING_CHARACTERISTIC;
     public static GameRules.Key<GameRules.BooleanValue> REGRESS_SEQUENCE_ON_DEATH;
     public static GameRules.Key<GameRules.BooleanValue> DISABLE_FLIGHT_IN_COMBAT;
+    public static GameRules.Key<GameRules.BooleanValue> ALLOW_ARTIFACTS;
+    public static GameRules.Key<GameRules.BooleanValue> ALLOW_ARTIFACTS_WITH_NO_NEGATIVES;
 
     public static GameRules.Key<GameRules.IntegerValue> SEQ_0_AMOUNT;
     public static GameRules.Key<GameRules.IntegerValue> SEQ_1_AMOUNT;
@@ -67,6 +69,18 @@ public class ModGameRules {
                 "regressSequenceOnDeath",
                 GameRules.Category.MISC,
                 GameRules.BooleanValue.create(true)
+        );
+
+        ALLOW_ARTIFACTS = GameRules.register(
+                "allowArtifacts",
+                GameRules.Category.MISC,
+                GameRules.BooleanValue.create(true)
+        );
+
+        ALLOW_ARTIFACTS_WITH_NO_NEGATIVES = GameRules.register(
+                "allowArtifactsWithNoNegatives",
+                GameRules.Category.MISC,
+                GameRules.BooleanValue.create(false)
         );
 
         SEQ_0_AMOUNT = GameRules.register(
