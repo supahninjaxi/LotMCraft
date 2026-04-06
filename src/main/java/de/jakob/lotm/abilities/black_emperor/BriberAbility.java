@@ -26,6 +26,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import de.jakob.lotm.particle.ModParticles;
+import de.jakob.lotm.util.helper.ParticleUtil;
+import de.jakob.lotm.util.helper.RingEffectManager;
 
 import java.util.*;
 
@@ -96,6 +99,12 @@ public class BriberAbility extends SelectableAbility {
             AbilityUtil.sendActionBar(entity, Component.literal("Ability failed.").withColor(0xFF5555));
             return;
         }
+
+        // Shared cast burst for all three bribe styles.
+        RingEffectManager.createRingForAll(target.position(), 2.0f, 16,
+                0.68f, 0.42f, 0.88f, 1.0f, 0.14f, 0.55f, serverLevel);
+        ParticleUtil.spawnSphereParticles(serverLevel, ModParticles.BLACK.get(),
+                target.position().add(0, 1, 0), 0.9, 14);
 
         transferOffhandItem(target, offHandItem);
 
@@ -182,6 +191,11 @@ public class BriberAbility extends SelectableAbility {
         UUID targetId = target.getUUID();
         WEAKENED.add(targetId);
 
+        ParticleUtil.spawnSphereParticles(serverLevel, ModParticles.BLACK.get(),
+                target.position().add(0, 1, 0), 1.0, 16);
+        RingEffectManager.createRingForAll(target.position(), 2.2f, 14,
+                0.18f, 0.10f, 0.18f, 0.9f, 0.12f, 0.5f, serverLevel);
+
         ServerScheduler.scheduleDelayed(20 * 5, () -> {
             AttributeInstance liveArmor = target.getAttribute(Attributes.ARMOR);
             if (liveArmor != null) {
@@ -205,6 +219,10 @@ public class BriberAbility extends SelectableAbility {
                     if (mappedCaster == null || !mappedCaster.equals(caster.getUUID())) {
                         return;
                     }
+
+                    ParticleUtil.createParticleSpirals(serverLevel, ModParticles.LIGHTNING.get(),
+                            target.position().add(0, 0.5, 0),
+                            0.25, 0.9, 1.4, 0.07, 8, 24, 2, 2);
 
                     target.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 40, 0, false, false, true));
 
@@ -234,6 +252,11 @@ public class BriberAbility extends SelectableAbility {
 
     private void applyCharm(ServerLevel serverLevel, LivingEntity caster, LivingEntity target) {
         CHARMED.put(target.getUUID(), caster.getUUID());
+
+        ParticleUtil.spawnSphereParticles(serverLevel, ModParticles.BLACK.get(),
+                target.position().add(0, 1, 0), 0.8, 10);
+        RingEffectManager.createRingForAll(target.position(), 1.8f, 12,
+                0.72f, 0.45f, 0.92f, 1.0f, 0.10f, 0.45f, serverLevel);
 
         ServerScheduler.scheduleForDuration(
                 0,

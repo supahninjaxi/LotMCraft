@@ -254,6 +254,16 @@ public class AbilityHandler {
         abilities.add(new Eloquence("eloquence_ability"));
         abilities.add(new LawProficiency("law_proficiency_ability"));
         abilities.add(new BriberAbility("briber_ability"));
+        abilities.add(new WeaknessDetectionAbility("weakness_detection_ability"));
+        abilities.add(new DistortionAbility("distortion_ability"));
+        abilities.add(new CorrosionAbility("corrosion_ability"));
+        abilities.add(new DisorderAbility("disorder_ability"));
+        abilities.add(new CommandingPresenceAbility("commanding_presence_ability"));
+        abilities.add(new ExploitAbility("exploit_ability"));
+        abilities.add(new BestowmentAbility("bestowment_ability"));
+        abilities.add(new MagnifyAbility("magnify_ability"));
+        abilities.add(new CommandingOrdersAbility("commanding_orders_ability"));
+
     }
 
     public HashSet<Ability> getAbilities() {

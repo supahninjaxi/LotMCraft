@@ -38,6 +38,12 @@ public class PacketHandler {
         );
 
         registrar.playToClient(
+                SyncWeaknessDetectionTargetsAbilityPacket.TYPE,
+                SyncWeaknessDetectionTargetsAbilityPacket.STREAM_CODEC,
+                SyncWeaknessDetectionTargetsAbilityPacket::handle
+        );
+
+        registrar.playToClient(
                 DisableAbilityUsageForTimePacket.TYPE,
                 DisableAbilityUsageForTimePacket.STREAM_CODEC,
                 DisableAbilityUsageForTimePacket::handle

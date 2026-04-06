@@ -50,7 +50,7 @@ public class PhysicalEnhancementsBlackEmperorAbility extends PhysicalEnhancement
             );
 
             case 6 -> List.of(
-                    new PhysicalEnhancement(EnhancementType.STRENGTH, 2),
+                    new PhysicalEnhancement(EnhancementType.STRENGTH, 3),
                     new PhysicalEnhancement(EnhancementType.SPEED, 2),
                     new PhysicalEnhancement(EnhancementType.REGENERATION, 2),
                     new PhysicalEnhancement(EnhancementType.HEALTH, 8),
@@ -58,7 +58,7 @@ public class PhysicalEnhancementsBlackEmperorAbility extends PhysicalEnhancement
             );
 
             case 5 -> List.of(
-                    new PhysicalEnhancement(EnhancementType.STRENGTH, 2),
+                    new PhysicalEnhancement(EnhancementType.STRENGTH, 3),
                     new PhysicalEnhancement(EnhancementType.SPEED, 2),
                     new PhysicalEnhancement(EnhancementType.REGENERATION, 2),
                     new PhysicalEnhancement(EnhancementType.HEALTH, 10),

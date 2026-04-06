@@ -5,6 +5,10 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import de.jakob.lotm.particle.ModParticles;
+import de.jakob.lotm.util.helper.ParticleUtil;
+import de.jakob.lotm.util.helper.RingEffectManager;
+import net.minecraft.server.level.ServerLevel;
 
 
 import java.util.Map;
