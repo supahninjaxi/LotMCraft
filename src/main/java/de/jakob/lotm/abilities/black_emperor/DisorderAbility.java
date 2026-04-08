@@ -197,26 +197,18 @@ public class DisorderAbility extends SelectableAbility {
      * Break Bonds: strips all active control effects from the target.
      * Can be used on self, an ally (to cleanse), or an enemy (to remove their active CC).
      */
-    /**
-     * Break Bonds: strips harmful effects and control tags from the target.
-     * Can be used on self, an ally (to cleanse), or an enemy (to remove their active CC).
-     */
-    /**
-     * Break Bonds: strips harmful effects and control tags from the target.
-     * Can be used on self, an ally (to cleanse), or an enemy (to remove their active CC).
-     */
+
     private void breakBonds(ServerLevel level, LivingEntity caster, LivingEntity target) {
-        // Remove fire first, same as the cleansing ability.
+        // Same core cleanse pattern as the Cleansing ability.
         target.setRemainingFireTicks(0);
 
-        // Remove all harmful vanilla effects, not just a few specific ones.
         target.getActiveEffects().stream()
                 .map(MobEffectInstance::getEffect)
                 .filter(effect -> effect.value().getCategory() == net.minecraft.world.effect.MobEffectCategory.HARMFUL)
                 .toList()
                 .forEach(target::removeEffect);
 
-        // Clear pathway-specific control tags.
+        // Clear control / disorder tags from this mod.
         target.getPersistentData().remove(DistortionAbility.DISTORT_ACTION_KEY);
         target.getPersistentData().remove(DistortionAbility.DISTORT_TRAJ_KEY);
         target.getPersistentData().remove(DISORDERED_ACTION_KEY);
@@ -226,26 +218,24 @@ public class DisorderAbility extends SelectableAbility {
         target.getPersistentData().remove(FrenzySubAbility.FRENZY_UNTIL_KEY);
         target.getPersistentData().remove(FrenzySubAbility.FRENZY_COOLDOWN_KEY);
 
-        // Remove BriberAbility armor debuff and WeaknessDetection boost if present.
+        // Remove other debuff-style modifiers if present.
         var armor = target.getAttribute(Attributes.ARMOR);
         if (armor != null) {
             armor.removeModifier(ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, "briber_weaken_armor"));
             armor.removeModifier(ResourceLocation.fromNamespaceAndPath(LOTMCraft.MOD_ID, "weakness_detection_boost"));
         }
 
-        // Cleanse-style support for players.
+        // Cleanse support
         if (target instanceof Player player) {
             player.getFoodData().setSaturation(20);
             player.getFoodData().setFoodLevel(20);
         }
 
-        // Different visuals from Cleansing: lightning burst + black ring.
-        ParticleUtil.spawnSphereParticles(level, ModParticles.LIGHTNING.get(),
-                target.position().add(0, 1, 0), 1.3, 22);
+        // Simple cleanse visuals.
+        RingEffectManager.createRingForAll(target.position().add(0, 1, 0), 2.0f, 60,
+                122 / 255f, 235 / 255f, 124 / 255f, 1.0f, 0.5f, 0.75f, level);
         ParticleUtil.spawnSphereParticles(level, ModParticles.BLACK.get(),
-                target.position().add(0, 1, 0), 1.0, 14);
-        RingEffectManager.createRingForAll(target.position(), 2.2f, 12,
-                0.10f, 0.0f, 0.18f, 0.9f, 0.12f, 0.5f, level);
+                target.position().add(0, 1, 0), 1.2, 18);
 
         AbilityUtil.sendActionBar(caster,
                 Component.literal("Control bonds shattered.").withColor(0x9933CC));
