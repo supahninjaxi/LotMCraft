@@ -1,7 +1,7 @@
 package de.jakob.lotm.network.packets.toClient;
 
 import de.jakob.lotm.LOTMCraft;
-import de.jakob.lotm.rendering.WeaknessDetectionRenderLayer;
+import de.jakob.lotm.network.packets.handlers.ClientHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -32,12 +32,7 @@ public record SyncWeaknessDetectionTargetsAbilityPacket(
             );
 
     public static void handle(SyncWeaknessDetectionTargetsAbilityPacket packet, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            WeaknessDetectionRenderLayer.activeWeaknessDetection.clear();
-            if (packet.active()) {
-                WeaknessDetectionRenderLayer.activeWeaknessDetection.putAll(packet.targets());
-            }
-        });
+        context.enqueueWork(() -> ClientHandler.handleSyncWeaknessDetectionPacket(packet));
     }
 
     @Override
