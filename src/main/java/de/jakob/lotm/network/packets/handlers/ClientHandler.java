@@ -487,4 +487,11 @@ public class ClientHandler {
             entity.getTags().add(packet.tag());
         }
     }
+
+    public static void handleSyncWeaknessDetectionPacket(SyncWeaknessDetectionTargetsAbilityPacket packet) {
+        WeaknessDetectionRenderLayer.activeWeaknessDetection.clear();
+        if (packet.active()) {
+            WeaknessDetectionRenderLayer.activeWeaknessDetection.putAll(packet.targets());
+        }
+    }
 }
