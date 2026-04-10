@@ -171,8 +171,8 @@ public class BriberAbility extends SelectableAbility {
 
     // This applies the debuff to the target and also marks them so their outgoing damage is reduced.
     private void applyWeaken(ServerLevel serverLevel, LivingEntity target) {
-        target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 5, 1, false, false, true));
-        target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 5, 0, false, false, true));
+        target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 30, 1, false, false, true));
+        target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 30, 0, false, false, true));
 
         // Reduce armor while the weaken effect is active.
         AttributeInstance armor = target.getAttribute(Attributes.ARMOR);
@@ -196,7 +196,7 @@ public class BriberAbility extends SelectableAbility {
         RingEffectManager.createRingForAll(target.position(), 2.2f, 14,
                 0.18f, 0.10f, 0.18f, 0.9f, 0.12f, 0.5f, serverLevel);
 
-        ServerScheduler.scheduleDelayed(20 * 5, () -> {
+        ServerScheduler.scheduleDelayed(20 * 30, () -> {
             AttributeInstance liveArmor = target.getAttribute(Attributes.ARMOR);
             if (liveArmor != null) {
                 liveArmor.removeModifier(WEAKEN_ARMOR_ID);
@@ -213,7 +213,7 @@ public class BriberAbility extends SelectableAbility {
         ServerScheduler.scheduleForDuration(
                 0,
                 20,
-                20 * 5,
+                20 * 30,
                 () -> {
                     UUID mappedCaster = ARROGANCE.get(target.getUUID());
                     if (mappedCaster == null || !mappedCaster.equals(caster.getUUID())) {
@@ -261,7 +261,7 @@ public class BriberAbility extends SelectableAbility {
         ServerScheduler.scheduleForDuration(
                 0,
                 10,
-                20 * 5,
+                20 * 10,
                 () -> {
                     UUID mappedCaster = CHARMED.get(target.getUUID());
                     if (mappedCaster == null || !mappedCaster.equals(caster.getUUID())) {
