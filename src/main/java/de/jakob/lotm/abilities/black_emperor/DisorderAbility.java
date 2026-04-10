@@ -21,6 +21,8 @@ import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import de.jakob.lotm.attachments.ModAttachments;
+import de.jakob.lotm.effect.ModEffects;
 
 
 import net.minecraft.world.phys.Vec3;
@@ -206,7 +208,7 @@ public class DisorderAbility extends SelectableAbility {
      */
 
     private void breakBonds(ServerLevel level, LivingEntity caster, LivingEntity target) {
-        // Same core cleanse pattern as the Cleansing ability.
+        // Cleanse fire and harmful effects
         target.setRemainingFireTicks(0);
 
         target.getActiveEffects().stream()
@@ -215,14 +217,17 @@ public class DisorderAbility extends SelectableAbility {
                 .toList()
                 .forEach(target::removeEffect);
 
+        // sanity fix its like placate
+        target.removeEffect(ModEffects.LOOSING_CONTROL);
+        target.getData(ModAttachments.SANITY_COMPONENT).increaseSanityAndSync(.15f, target);
 
-        // Cleanse support
+        // Cleanse support.
         if (target instanceof Player player) {
             player.getFoodData().setSaturation(20);
             player.getFoodData().setFoodLevel(20);
         }
 
-        // Simple cleanse visuals.
+        // Simple cleanse visuals
         RingEffectManager.createRingForAll(target.position().add(0, 1, 0), 2.0f, 60,
                 122 / 255f, 235 / 255f, 124 / 255f, 1.0f, 0.5f, 0.75f, level);
         ParticleUtil.spawnSphereParticles(level, ModParticles.BLACK.get(),

@@ -46,8 +46,9 @@ public class DistortionAbility extends SelectableAbility {
     // Seq 4+ wound distortion tuning.
     private static final float WOUND_DISTORT_HEAL_SEQ4 = 0.35f;
 
-    // Tracks UUID -> caster UUID for intent distortion retargeting
+    // Tracks UUID -> caster UUID for intent distortion redirection.
     private static final Map<UUID, UUID> INTENT_DISTORTED = new HashMap<>();
+    private static final Map<UUID, Long> INTENT_DISTORTED_UNTIL = new HashMap<>();
 
     // Seq 5+ concept-link state
     private static final Map<UUID, UUID> CONCEPT_LINKS = new HashMap<>();
@@ -154,63 +155,19 @@ public class DistortionAbility extends SelectableAbility {
         ParticleUtil.spawnSphereParticles(level, ModParticles.BLACK.get(),
                 caster.position().add(0, 1, 0), strong ? 1.0 : 0.7, strong ? 12 : 10);
 
+        // Mark the target: their next hit on the caster gets bounced.
         INTENT_DISTORTED.put(target.getUUID(), caster.getUUID());
+        INTENT_DISTORTED_UNTIL.put(target.getUUID(), level.getGameTime() + (strong ? 20 * 6 : 20 * 5));
 
-        if (target instanceof Mob mob) {
-            mob.setTarget(null);
-            mob.getNavigation().stop();
-
-            int radius = strong ? 14 : 10;
-
-            List<LivingEntity> nearby = level.getEntitiesOfClass(
-                    LivingEntity.class,
-                    target.getBoundingBox().inflate(radius),
-                    e -> e != target && e != caster
-            );
-
-            if (!nearby.isEmpty()) {
-                LivingEntity newTarget = nearby.get(level.random.nextInt(nearby.size()));
-                mob.setTarget(newTarget);
-                if (strong) {
-                    mob.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 60, 0, false, false, false));
-                    mob.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 60, 0, false, false, false));
-                }
-                AbilityUtil.sendActionBar(caster,
-                        Component.literal("Intent distorted — enemy retargeted.")
-                                .withColor(0xAA77FF));
-            } else {
-                AbilityUtil.sendActionBar(caster,
-                        Component.literal("Intent distorted — target confused.")
-                                .withColor(0xAA77FF));
-            }
-        } else {
-            int duration = strong ? 20 * 4 : 20 * 3;
-            int interval = strong ? 4 : 5;
-            double nudges = strong ? 0.24 : 0.18;
-
-            ServerScheduler.scheduleForDuration(
-                    0, interval, duration,
-                    () -> target.setDeltaMovement(
-                            target.getDeltaMovement().add(
-                                    (level.random.nextDouble() - 0.5) * nudges,
-                                    0,
-                                    (level.random.nextDouble() - 0.5) * nudges)),
-                    () -> INTENT_DISTORTED.remove(target.getUUID()),
-                    level
-            );
-
-            if (strong) {
-                target.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 60, 0, false, false, false));
-            }
-
-            AbilityUtil.sendActionBar(caster,
-                    Component.literal("Intent distorted.").withColor(0xAA77FF));
-        }
+        AbilityUtil.sendActionBar(caster,
+                Component.literal("Intent distorted.").withColor(0xAA77FF));
 
         playDistortionCastFX(level, caster, target, strong);
 
-        ServerScheduler.scheduleDelayed(strong ? 20 * 6 : 20 * 5, () ->
-                INTENT_DISTORTED.remove(target.getUUID()), level);
+        ServerScheduler.scheduleDelayed(strong ? 20 * 6 : 20 * 5, () -> {
+            INTENT_DISTORTED.remove(target.getUUID());
+            INTENT_DISTORTED_UNTIL.remove(target.getUUID());
+        }, level);
     }
 
     private void distortTrajectory(ServerLevel level, LivingEntity caster, LivingEntity target) {
@@ -346,6 +303,43 @@ public class DistortionAbility extends SelectableAbility {
 
         LivingEntity victim = event.getEntity();
 
+        // Intent distortion: bounce the hit, then move harmful effects too.
+        if (attacker != null) {
+            UUID distortedCasterId = INTENT_DISTORTED.get(attacker.getUUID());
+            Long distortedUntil = INTENT_DISTORTED_UNTIL.get(attacker.getUUID());
+
+            if (distortedCasterId != null
+                    && distortedUntil != null
+                    && distortedUntil >= victim.level().getGameTime()
+                    && victim.getUUID().equals(distortedCasterId)
+                    && victim.level() instanceof ServerLevel serverLevel) {
+
+                float dmg = event.getNewDamage();
+                if (dmg > 0.0f) {
+                    LivingEntity redirectTarget = findNearestLivingToCaster(serverLevel, victim, attacker, 16.0D);
+
+                    event.setNewDamage(0.0f);
+
+                    // Consume the mark on first successful redirect.
+                    INTENT_DISTORTED.remove(attacker.getUUID());
+                    INTENT_DISTORTED_UNTIL.remove(attacker.getUUID());
+
+                    // Move harmful active effects off the victim and onto the redirection target.
+                    if (redirectTarget != null) {
+                        transferHarmfulEffects(victim, redirectTarget);
+                        redirectTarget.hurt(source, dmg);
+
+                        ParticleUtil.spawnSphereParticles(serverLevel, ModParticles.BLACK.get(),
+                                redirectTarget.position().add(0, 1, 0), 1.0, 14);
+                    } else {
+                        clearHarmfulEffects(victim);
+                    }
+
+                    return;
+                }
+            }
+        }
+
         if (attacker == null) {
             applyConceptSplitIfLinked(victim, event);
             return;
@@ -393,6 +387,29 @@ public class DistortionAbility extends SelectableAbility {
         projectile.hasImpulse = true;
     }
 
+    private static void transferHarmfulEffects(LivingEntity source, LivingEntity destination) {
+        if (destination == null || source == destination) return;
+
+        // Move harmful potion-style effects only.
+        List<MobEffectInstance> harmful = source.getActiveEffects().stream()
+                .filter(effect -> effect.getEffect().value().getCategory() == net.minecraft.world.effect.MobEffectCategory.HARMFUL)
+                .map(MobEffectInstance::new)
+                .toList();
+
+        for (MobEffectInstance effect : harmful) {
+            source.removeEffect(effect.getEffect());
+            destination.addEffect(effect);
+        }
+    }
+
+    private static void clearHarmfulEffects(LivingEntity source) {
+        source.getActiveEffects().stream()
+                .map(MobEffectInstance::getEffect)
+                .filter(effect -> effect.value().getCategory() == net.minecraft.world.effect.MobEffectCategory.HARMFUL)
+                .toList()
+                .forEach(source::removeEffect);
+    }
+
     private static void applyConceptSplitIfLinked(LivingEntity victim, LivingDamageEvent.Pre event) {
         UUID partnerId = CONCEPT_LINKS.get(victim.getUUID());
         if (partnerId == null) return;
@@ -419,6 +436,27 @@ public class DistortionAbility extends SelectableAbility {
             CONCEPT_LOCK.remove(victim.getUUID());
             CONCEPT_LOCK.remove(partner.getUUID());
         }
+    }
+
+    private static LivingEntity findNearestLivingToCaster(ServerLevel level, LivingEntity caster, LivingEntity attacker, double radius) {
+        List<LivingEntity> nearby = level.getEntitiesOfClass(
+                LivingEntity.class,
+                caster.getBoundingBox().inflate(radius),
+                e -> e.isAlive() && e != caster && e != attacker && !e.isAlliedTo(caster)
+        );
+
+        LivingEntity closest = null;
+        double bestDist = Double.MAX_VALUE;
+
+        for (LivingEntity candidate : nearby) {
+            double dist = candidate.distanceToSqr(caster);
+            if (dist < bestDist) {
+                bestDist = dist;
+                closest = candidate;
+            }
+        }
+
+        return closest;
     }
 
     private static LivingEntity findLivingByUuid(ServerLevel level, LivingEntity source, UUID uuid) {

@@ -50,8 +50,10 @@ public class CommandingPresenceAbility extends ToggleAbility {
     private static final Map<UUID, UUID> PRESENCE_SPIRITUALITY_DRAIN = new HashMap<>();
     private static final Map<UUID, Long> PRESENCE_SPIRITUALITY_DRAIN_UNTIL = new HashMap<>();
 
-    // S4: restore caster size
+    // S4: restore caster movement
     private static final String COMMANDING_SCALE_BACKUP_KEY = "lotm_commanding_presence_scale_backup";
+    private static final String COMMANDING_STEP_BACKUP_KEY = "lotm_commanding_presence_step_backup";
+    private static final String COMMANDING_JUMP_BACKUP_KEY = "lotm_commanding_presence_jump_backup";
 
     private static final String[] REVERENCE_MESSAGES = {
             "An overwhelming sense of authority washes over you...",
@@ -83,24 +85,44 @@ public class CommandingPresenceAbility extends ToggleAbility {
         ACTIVE_CASTERS.add(entity.getUUID());
         entity.getPersistentData().putBoolean("lotm_commanding_presence_active", true);
 
-        // S4: scale caster
+        boolean dukeTier = isDukeTier(entity);
+
+        // S2: Duke tier gets the bigger body.
         AttributeInstance scaleAttr = entity.getAttribute(Attributes.SCALE);
         if (scaleAttr != null) {
             entity.getPersistentData().putDouble(COMMANDING_SCALE_BACKUP_KEY, scaleAttr.getBaseValue());
-            scaleAttr.setBaseValue(1.5D);
+            scaleAttr.setBaseValue(dukeTier ? 2.0D : 1.5D);
             entity.refreshDimensions();
         }
 
-        // S1: Seq 3+ aura visuals scale with strength
+        // S2: step up one block easier.
+        AttributeInstance stepAttr = entity.getAttribute(Attributes.STEP_HEIGHT);
+        if (stepAttr != null && dukeTier) {
+            entity.getPersistentData().putDouble(COMMANDING_STEP_BACKUP_KEY, stepAttr.getBaseValue());
+            stepAttr.setBaseValue(1.05D);
+        }
+
+        // S2: jump boost while active.
+        AttributeInstance jumpAttr = entity.getAttribute(Attributes.JUMP_STRENGTH);
+        if (jumpAttr != null && dukeTier) {
+            entity.getPersistentData().putDouble(COMMANDING_JUMP_BACKUP_KEY, jumpAttr.getBaseValue());
+            jumpAttr.setBaseValue(1.0D);
+        }
+
+        if (dukeTier) {
+            entity.addEffect(new MobEffectInstance(MobEffects.JUMP, 40, 1, false, false, false));
+        }
+
+        // S1/S2: opening burst scales with authority.
         boolean presenceAuraTier = isPresenceAuraTier(entity);
         double presenceScale = getPresenceScale(entity);
 
         RingEffectManager.createPulsingRingForAll(
                 entity.position(),
-                presenceAuraTier ? (float) (22f * presenceScale) : 18f,
-                presenceAuraTier ? 3 : 2,
-                presenceAuraTier ? 28 : 24,
-                presenceAuraTier ? 12 : 10,
+                dukeTier ? 44f : (presenceAuraTier ? (float) (22f * presenceScale) : 18f),
+                dukeTier ? 4 : (presenceAuraTier ? 3 : 2),
+                dukeTier ? 32 : (presenceAuraTier ? 28 : 24),
+                dukeTier ? 10 : (presenceAuraTier ? 12 : 10),
                 0.15f, 0.0f, 0.25f, 1.0f, 0.20f, 1.2f, serverLevel
         );
 
@@ -108,20 +130,20 @@ public class CommandingPresenceAbility extends ToggleAbility {
                 serverLevel,
                 ModParticles.BLACK.get(),
                 entity.position().add(0, 1, 0),
-                presenceAuraTier ? 5.0 * presenceScale : 4.2,
-                presenceAuraTier ? (int) (68 * presenceScale) : 54
+                dukeTier ? 6.0 : (presenceAuraTier ? 5.0 * presenceScale : 4.2),
+                dukeTier ? 96 : (presenceAuraTier ? (int) (68 * presenceScale) : 54)
         );
 
         ParticleUtil.createParticleSpirals(
                 serverLevel,
                 ModParticles.LIGHTNING.get(),
                 entity.position().add(0, 0.5, 0),
-                presenceAuraTier ? 0.42 * presenceScale : 0.35,
-                presenceAuraTier ? 1.35 * presenceScale : 1.2,
-                presenceAuraTier ? 2.3 * presenceScale : 2.0,
+                dukeTier ? 0.55 : (presenceAuraTier ? 0.42 * presenceScale : 0.35),
+                dukeTier ? 1.70 : (presenceAuraTier ? 1.35 * presenceScale : 1.2),
+                dukeTier ? 2.80 : (presenceAuraTier ? 2.3 * presenceScale : 2.0),
                 0.08,
-                presenceAuraTier ? (int) (18 * presenceScale) : 14,
-                presenceAuraTier ? (int) (42 * presenceScale) : 36,
+                dukeTier ? 24 : (presenceAuraTier ? (int) (18 * presenceScale) : 14),
+                dukeTier ? 56 : (presenceAuraTier ? (int) (42 * presenceScale) : 36),
                 2, 3
         );
 
@@ -135,17 +157,24 @@ public class CommandingPresenceAbility extends ToggleAbility {
 
         int selfSeq = BeyonderData.getSequence(entity);
         boolean presenceAuraTier = selfSeq <= 3; // Seq 3 and stronger
+        boolean dukeTier = selfSeq <= 2;         // Seq 2 Duke of Entropy and stronger
         boolean seq5LegacyTier = selfSeq == 5;   // old package
 
-        double presenceScale = 1.0D + Math.max(0, 3 - selfSeq) * 0.20D;
+        double presenceScale = getPresenceScale(entity);
+        double auraRange = dukeTier ? 36.0D : 18.0D;
 
         long gameTick = level.getGameTime();
         UUID casterId = entity.getUUID();
 
+        // S2: keep jump boost alive while active.
+        if (dukeTier && gameTick % 20 == 0) {
+            entity.addEffect(new MobEffectInstance(MobEffects.JUMP, 40, 1, false, false, false));
+        }
+
         Set<UUID> seenSubjects = new HashSet<>();
 
         for (LivingEntity target : level.getEntitiesOfClass(
-                LivingEntity.class, entity.getBoundingBox().inflate(18))) {
+                LivingEntity.class, entity.getBoundingBox().inflate(auraRange))) {
 
             if (target == entity) continue;
 
@@ -214,6 +243,16 @@ public class CommandingPresenceAbility extends ToggleAbility {
                     }
                 }
 
+                // S2: ground shake for every player in range
+                if (dukeTier && gameTick % 4 == 0) {
+                    player.setDeltaMovement(player.getDeltaMovement().add(
+                            (serverLevel.random.nextDouble() - 0.5D) * 0.06D,
+                            0.0D,
+                            (serverLevel.random.nextDouble() - 0.5D) * 0.06D
+                    ));
+                    player.hurtMarked = true;
+                }
+
                 long lastMsg = LAST_MSG_TICK.getOrDefault(player.getUUID(), 0L);
                 if (gameTick - lastMsg >= 100) {
                     LAST_MSG_TICK.put(player.getUUID(), gameTick);
@@ -225,6 +264,12 @@ public class CommandingPresenceAbility extends ToggleAbility {
                     target.addEffect(new MobEffectInstance(
                             MobEffects.CONFUSION, 30, 0, false, false, false));
                 }
+            }
+
+            // S2: spirituality drain inside the duke aura
+            if (dukeTier && isBeyonder && targetSeq >= selfSeq && gameTick % 20 == 0) {
+                float drainAmount = 0.75f + Math.max(0, targetSeq - selfSeq) * 0.35f;
+                drainSpirituality(target, drainAmount);
             }
 
             // S3: legacy drain
@@ -275,6 +320,23 @@ public class CommandingPresenceAbility extends ToggleAbility {
             );
         }
 
+        // S2: Duke of Entropy pressure burst
+        if (dukeTier && gameTick % 4 == 0) {
+            RingEffectManager.createRingForAll(
+                    entity.position(),
+                    38f, 24,
+                    0.72f, 0.16f, 0.92f, 1.0f, 0.20f, 1.15f, serverLevel
+            );
+
+            ParticleUtil.spawnSphereParticles(
+                    serverLevel,
+                    ModParticles.BLACK.get(),
+                    entity.position().add(0, 1, 0),
+                    6.0,
+                    72
+            );
+        }
+
         // S2: legacy aura
         if (seq5LegacyTier && gameTick % 18 == 0) {
             double offsetX = (serverLevel.random.nextDouble() - 0.5D) * 2.5D;
@@ -319,6 +381,24 @@ public class CommandingPresenceAbility extends ToggleAbility {
             entity.refreshDimensions();
             entity.getPersistentData().remove(COMMANDING_SCALE_BACKUP_KEY);
         }
+
+        // S4: restore step height
+        AttributeInstance stepAttr = entity.getAttribute(Attributes.STEP_HEIGHT);
+        if (stepAttr != null && entity.getPersistentData().contains(COMMANDING_STEP_BACKUP_KEY)) {
+            double previousStep = entity.getPersistentData().getDouble(COMMANDING_STEP_BACKUP_KEY);
+            stepAttr.setBaseValue(previousStep);
+            entity.getPersistentData().remove(COMMANDING_STEP_BACKUP_KEY);
+        }
+
+        // S4: restore jump strength
+        AttributeInstance jumpAttr = entity.getAttribute(Attributes.JUMP_STRENGTH);
+        if (jumpAttr != null && entity.getPersistentData().contains(COMMANDING_JUMP_BACKUP_KEY)) {
+            double previousJump = entity.getPersistentData().getDouble(COMMANDING_JUMP_BACKUP_KEY);
+            jumpAttr.setBaseValue(previousJump);
+            entity.getPersistentData().remove(COMMANDING_JUMP_BACKUP_KEY);
+        }
+
+        entity.removeEffect(MobEffects.JUMP);
 
         // S4: shutdown burst
         RingEffectManager.createPulsingRingForAll(entity.position(), 18, 2, 24, 10,
@@ -477,8 +557,13 @@ public class CommandingPresenceAbility extends ToggleAbility {
         return BeyonderData.getSequence(entity) <= 3;
     }
 
+    // S2 helper
+    private static boolean isDukeTier(LivingEntity entity) {
+        return BeyonderData.getSequence(entity) <= 2;
+    }
+
     // S1 helper
     private static double getPresenceScale(LivingEntity entity) {
-        return 1.0D + Math.max(0, 3 - BeyonderData.getSequence(entity)) * 0.20D;
+        return isDukeTier(entity) ? 2.0D : 1.0D + Math.max(0, 3 - BeyonderData.getSequence(entity)) * 0.20D;
     }
 }
