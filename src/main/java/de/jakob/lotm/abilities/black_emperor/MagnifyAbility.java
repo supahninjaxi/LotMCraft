@@ -17,6 +17,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -226,14 +227,28 @@ public class MagnifyAbility extends SelectableAbility {
                     if (toCaster.lengthSqr() < 0.01D) return;
 
                     Vec3 dir = toCaster.normalize();
-                    double strength = Math.min(2.6D, 1.1D + (distance / 18.0D));
+                    double strength = Math.min(3.2D, 1.35D + (distance / 12.0D));
 
-                    target.setDeltaMovement(target.getDeltaMovement().add(
-                            dir.x * strength,
-                            0.12D,
-                            dir.z * strength
-                    ));
-                    target.hasImpulse = true;
+                    if (target instanceof ServerPlayer player) {
+                        Vec3 nextPos = player.position().add(
+                                dir.x * strength,
+                                0.06D,
+                                dir.z * strength
+                        );
+
+                        player.teleportTo(level, nextPos.x, nextPos.y, nextPos.z, player.getYRot(), player.getXRot());
+                        player.setDeltaMovement(Vec3.ZERO);
+                        player.hasImpulse = true;
+                        player.hurtMarked = true;
+                    } else {
+                        target.setDeltaMovement(target.getDeltaMovement().add(
+                                dir.x * strength,
+                                0.12D,
+                                dir.z * strength
+                        ));
+                        target.hasImpulse = true;
+                        target.hurtMarked = true;
+                    }
 
                     if (level.getGameTime() % 3 == 0) {
                         ParticleUtil.spawnSphereParticles(level, ModParticles.BLACK.get(),
@@ -301,5 +316,31 @@ public class MagnifyAbility extends SelectableAbility {
         if (diff == 1) return random.nextFloat() < 0.35f;
         if (diff == 2) return random.nextFloat() < 0.20f;
         return false;
+
     }
+
+
+    private int getMagnifyGrabRange(LivingEntity caster) {
+        if (!BeyonderData.isBeyonder(caster)) {
+            return 50;
+        }
+
+        int seq = BeyonderData.getSequence(caster);
+
+        // Seq 4 -> 50, Seq 3 -> 67, Seq 2 -> 83, Seq 1 -> 100
+        int range = 50 + (4 - seq) * 17;
+        return Math.max(50, Math.min(100, range));
+    }
+
+    private int getMagnifyExecutionRange(LivingEntity caster) {
+        if (!BeyonderData.isBeyonder(caster)) {
+            return 50;
+        }
+
+        int seq = BeyonderData.getSequence(caster);
+        int range = 50 + (4 - seq) * 17;
+        return Math.max(50, Math.min(100, range));
+    }
+
 }
+
